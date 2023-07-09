@@ -68,6 +68,22 @@ export default function Home() {
     }
   };
 
+  function BotTyping() {
+    return (
+      botIsTyping ?
+        <div className="flex flex-row whitespace-pre-wrap py-3 items-start pl-3" style={{ backgroundColor: '#F3F2F1' }}>
+          <ThemeIcon size="md" variant="gradient" gradient={{ from: 'indigo', to: 'cyan' }} className='shadow-md'>
+            <Image maw={20} mx="auto" fit="contain" src="https://i.postimg.cc/MGvN9TNY/Vector-1.png" />
+          </ThemeIcon>
+          <div className="ml-3 flex flex-row" style={{ paddingTop: '3px' }}>
+          <Image src="https://thumbs.gfycat.com/GrippingReflectingBasenji-max-1mb.gif" width={30} />
+          </div>
+        </div>
+        : null
+    );
+  }
+  
+
   useEffect(() => {
     supabaseBrowserClient.auth.getSession().then(({ data: { session } }) => {
       if (!session) {
@@ -282,11 +298,11 @@ export default function Home() {
     </div>
   ))
 : null}
-
-
+<BotTyping />
 
             </div>
             </div>
+
 
           <div className="flex flex-col items-stretch">
           {showPrompts && (
@@ -353,8 +369,7 @@ export default function Home() {
                 variant="transparent"
                 type="submit" 
                 className="absolute inset-y-0 right-0 pr-3 flex items-center border border-transparent rounded h-10 w-10">
-                {botIsTyping ? <Image src="https://thumbs.gfycat.com/GrimyPlainKakarikis-size_restricted.gif" size="2rem" /> : <IconSend size="1.125rem" />}
-
+                <IconSend size="1.125rem" />
               </ActionIcon>
             </form>
             <ActionIcon onClick={clearMessages} className="border border-gray-300 rounded h-10 w-10">
