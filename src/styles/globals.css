@@ -1,0 +1,42 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  font-family: "mediumllweb", "sans-serif";
+}
+p > a {
+  color: #192bd5;
+  text-decoration: underline;
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.gradient {
+  background: linear-gradient(-45deg, #C4422B, #FADC4B, #2F6D41, #3370B3);
+  background-size: 200% 200%; 
+  animation: gradient 10s ease infinite; 
+}
+
+.autocomplete-dropdown {
+  z-index: 1000 !important; /* Adjust this value as necessary */
+}
+
+.search-text {
+  font-family: Arial, sans-serif;
+  font-weight: normal;
+}
+
+.white-fade {
+  background: linear-gradient(to bottom, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%);
+}

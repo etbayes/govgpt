@@ -1,2 +1,3 @@
-# govgpt.uk
-Redesign of gov.uk using LLMs!
+# GOVGPT.UK
+
+Redesign of the gov.uk website
