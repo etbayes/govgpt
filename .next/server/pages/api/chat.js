@@ -1,304 +1,155 @@
 "use strict";
+/*
+ * ATTENTION: An "eval-source-map" devtool has been used.
+ * This devtool is neither made for production nor for readable output files.
+ * It uses "eval()" calls to create a separate source file with attached SourceMaps in the browser devtools.
+ * If you are trying to read the output file, select a different devtool (https://webpack.js.org/configuration/devtool/)
+ * or disable the default devtool with "devtool: false".
+ * If you are looking for production-ready output files, see mode: "production" (https://webpack.js.org/configuration/mode/).
+ */
 (() => {
 var exports = {};
-exports.id = 170;
-exports.ids = [170,983,442];
+exports.id = "pages/api/chat";
+exports.ids = ["pages/api/chat"];
 exports.modules = {
 
-/***/ 1:
+/***/ "@supabase/auth-helpers-nextjs":
+/*!************************************************!*\
+  !*** external "@supabase/auth-helpers-nextjs" ***!
+  \************************************************/
 /***/ ((module) => {
 
 module.exports = require("@supabase/auth-helpers-nextjs");
 
 /***/ }),
 
-/***/ 885:
+/***/ "@supabase/supabase-js":
+/*!****************************************!*\
+  !*** external "@supabase/supabase-js" ***!
+  \****************************************/
 /***/ ((module) => {
 
 module.exports = require("@supabase/supabase-js");
 
 /***/ }),
 
-/***/ 886:
+/***/ "langchain/callbacks":
+/*!**************************************!*\
+  !*** external "langchain/callbacks" ***!
+  \**************************************/
 /***/ ((module) => {
 
 module.exports = import("langchain/callbacks");;
 
 /***/ }),
 
-/***/ 360:
+/***/ "langchain/chains":
+/*!***********************************!*\
+  !*** external "langchain/chains" ***!
+  \***********************************/
 /***/ ((module) => {
 
 module.exports = import("langchain/chains");;
 
 /***/ }),
 
-/***/ 490:
+/***/ "langchain/chat_models/openai":
+/*!***********************************************!*\
+  !*** external "langchain/chat_models/openai" ***!
+  \***********************************************/
 /***/ ((module) => {
 
 module.exports = import("langchain/chat_models/openai");;
 
 /***/ }),
 
-/***/ 405:
+/***/ "langchain/embeddings/openai":
+/*!**********************************************!*\
+  !*** external "langchain/embeddings/openai" ***!
+  \**********************************************/
 /***/ ((module) => {
 
 module.exports = import("langchain/embeddings/openai");;
 
 /***/ }),
 
-/***/ 561:
+/***/ "langchain/llms/openai":
+/*!****************************************!*\
+  !*** external "langchain/llms/openai" ***!
+  \****************************************/
 /***/ ((module) => {
 
 module.exports = import("langchain/llms/openai");;
 
 /***/ }),
 
-/***/ 459:
+/***/ "langchain/prompts":
+/*!************************************!*\
+  !*** external "langchain/prompts" ***!
+  \************************************/
 /***/ ((module) => {
 
 module.exports = import("langchain/prompts");;
 
 /***/ }),
 
-/***/ 230:
+/***/ "langchain/vectorstores/supabase":
+/*!**************************************************!*\
+  !*** external "langchain/vectorstores/supabase" ***!
+  \**************************************************/
 /***/ ((module) => {
 
 module.exports = import("langchain/vectorstores/supabase");;
 
 /***/ }),
 
-/***/ 300:
+/***/ "(api)/./src/pages/api/chat.ts":
+/*!*******************************!*\
+  !*** ./src/pages/api/chat.ts ***!
+  \*******************************/
 /***/ ((module, __webpack_exports__, __webpack_require__) => {
 
-__webpack_require__.a(module, async (__webpack_handle_async_dependencies__, __webpack_async_result__) => { try {
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ handler)
-/* harmony export */ });
-/* harmony import */ var langchain_callbacks__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(886);
-/* harmony import */ var langchain_chains__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(360);
-/* harmony import */ var langchain_chat_models_openai__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(490);
-/* harmony import */ var langchain_llms_openai__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(561);
-/* harmony import */ var langchain_prompts__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(459);
-/* harmony import */ var _supabase_auth_helpers_nextjs__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(1);
-/* harmony import */ var _supabase_auth_helpers_nextjs__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_supabase_auth_helpers_nextjs__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var _conversationLog__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(367);
-/* harmony import */ var _matches__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(52);
-/* harmony import */ var _templates__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(22);
-var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([langchain_callbacks__WEBPACK_IMPORTED_MODULE_0__, langchain_chains__WEBPACK_IMPORTED_MODULE_1__, langchain_chat_models_openai__WEBPACK_IMPORTED_MODULE_2__, langchain_llms_openai__WEBPACK_IMPORTED_MODULE_3__, langchain_prompts__WEBPACK_IMPORTED_MODULE_4__, _matches__WEBPACK_IMPORTED_MODULE_7__]);
-([langchain_callbacks__WEBPACK_IMPORTED_MODULE_0__, langchain_chains__WEBPACK_IMPORTED_MODULE_1__, langchain_chat_models_openai__WEBPACK_IMPORTED_MODULE_2__, langchain_llms_openai__WEBPACK_IMPORTED_MODULE_3__, langchain_prompts__WEBPACK_IMPORTED_MODULE_4__, _matches__WEBPACK_IMPORTED_MODULE_7__] = __webpack_async_dependencies__.then ? (await __webpack_async_dependencies__)() : __webpack_async_dependencies__);
-
-
-
-
-
-
-
-
-
-const llm = new langchain_llms_openai__WEBPACK_IMPORTED_MODULE_3__.OpenAI({});
-const handleRequest = async ({ prompt , userId , supabaseAuthedClient  })=>{
-    try {
-        const channel = supabaseAuthedClient.channel(userId);
-        const { data  } = await supabaseAuthedClient.from("conversations").insert({
-            speaker: "ai",
-            user_id: userId
-        }).select().single().throwOnError();
-        const interactionId = data?.id;
-        // Retrieve the conversation log and save the user's prompt
-        const conversationLog = new _conversationLog__WEBPACK_IMPORTED_MODULE_6__.ConversationLog(userId);
-        const conversationHistory = await conversationLog.getConversation({
-            limit: 5
-        });
-        await conversationLog.addEntry({
-            entry: prompt,
-            speaker: "user"
-        });
-        // Add logic for inquiryChain to improve the user prompt
-        const inquiryChain = new langchain_chains__WEBPACK_IMPORTED_MODULE_1__.LLMChain({
-            llm,
-            prompt: new langchain_prompts__WEBPACK_IMPORTED_MODULE_4__.PromptTemplate({
-                template: _templates__WEBPACK_IMPORTED_MODULE_8__.templates.inquiryTemplate,
-                inputVariables: [
-                    "userPrompt",
-                    "conversationHistory"
-                ]
-            })
-        });
-        const inquiryChainResult = await inquiryChain.call({
-            userPrompt: prompt,
-            conversationHistory
-        });
-        const inquiry = inquiryChainResult.text;
-        console.log("Here is the conversation history: " + JSON.stringify(conversationHistory, null, 2));
-        // const inquiry = prompt;
-        channel.subscribe(async (status)=>{
-            if (status === "SUBSCRIBED") {
-                await channel.send({
-                    type: "broadcast",
-                    event: "chat",
-                    payload: {
-                        event: "status",
-                        message: "Finding matches..."
-                    }
-                });
-                const matches = await (0,_matches__WEBPACK_IMPORTED_MODULE_7__.getMatchesFromEmbeddings)(inquiry, supabaseAuthedClient, 2);
-                const urls = matches && Array.from(new Set(matches.map((match)=>{
-                    const metadata = match.metadata;
-                    const { url  } = metadata;
-                    return url;
-                })));
-                const promptTemplate = new langchain_prompts__WEBPACK_IMPORTED_MODULE_4__.PromptTemplate({
-                    template: _templates__WEBPACK_IMPORTED_MODULE_8__.templates.qaTemplate,
-                    inputVariables: [
-                        "summaries",
-                        "question",
-                        "conversationHistory"
-                    ]
-                });
-                let i = 0;
-                const chat = new langchain_chat_models_openai__WEBPACK_IMPORTED_MODULE_2__.ChatOpenAI({
-                    streaming: true,
-                    verbose: true,
-                    modelName: "gpt-3.5-turbo-16k",
-                    callbackManager: langchain_callbacks__WEBPACK_IMPORTED_MODULE_0__.CallbackManager.fromHandlers({
-                        async handleLLMNewToken (token) {
-                            const text = token || "";
-                            if (![
-                                "I don't know",
-                                "sorry",
-                                "Ask another question"
-                            ].some((el)=>text.toLowerCase().includes(el.toLowerCase()))) {
-                                await channel.send({
-                                    type: "broadcast",
-                                    event: "chat",
-                                    payload: {
-                                        event: "response",
-                                        token,
-                                        interactionId
-                                    }
-                                });
-                            }
-                        },
-                        async handleLLMEnd (result) {
-                            // Store answer in DB
-                            await supabaseAuthedClient.from("conversations").update({
-                                entry: result.generations[0][0].text
-                            }).eq("id", interactionId);
-                            const text = result.generations[0][0].text;
-                            let urlsToReturn = urls;
-                            if ([
-                                "I don't know",
-                                "sorry",
-                                "Ask another question"
-                            ].some((el)=>text.toLowerCase().includes(el.toLowerCase()))) {
-                                urlsToReturn = [
-                                    "https://www.gov.uk/"
-                                ];
-                            }
-                            // Here the change is made to send the content instead of the token
-                            await channel.send({
-                                type: "broadcast",
-                                event: "chat",
-                                payload: {
-                                    event: "responseEnd",
-                                    token: text,
-                                    interactionId,
-                                    urls: urlsToReturn
-                                }
-                            });
-                        }
-                    })
-                });
-                const chain = new langchain_chains__WEBPACK_IMPORTED_MODULE_1__.LLMChain({
-                    prompt: promptTemplate,
-                    llm: chat
-                });
-                const summary = matches.map((match)=>match.pageContent ? match.pageContent : "").join("\n");
-                await chain.call({
-                    summaries: summary,
-                    question: prompt,
-                    conversationHistory: conversationHistory
-                });
-            }
-        });
-    } catch (error) {
-        //@ts-ignore
-        console.error(error);
-    }
-};
-async function handler(req, res) {
-    // Create authenticated Supabase Client
-    const supabase = (0,_supabase_auth_helpers_nextjs__WEBPACK_IMPORTED_MODULE_5__.createPagesServerClient)({
-        req,
-        res
-    }, {
-        options: {
-            realtime: {
-                params: {
-                    eventsPerSecond: -1
-                }
-            }
-        }
-    });
-    const { data: { session  }  } = await supabase.auth.getSession();
-    if (!session) return res.status(401).json({
-        error: "not_authenticated",
-        description: "The user does not have an active session or is not authenticated"
-    });
-    const { body  } = req;
-    const { prompt  } = body;
-    await handleRequest({
-        prompt,
-        userId: session.user.id,
-        supabaseAuthedClient: supabase
-    });
-    res.status(200).json({
-        message: "started"
-    });
-}
-{}
-__webpack_async_result__();
-} catch(e) { __webpack_async_result__(e); } });
+eval("__webpack_require__.a(module, async (__webpack_handle_async_dependencies__, __webpack_async_result__) => { try {\n__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (/* binding */ handler)\n/* harmony export */ });\n/* harmony import */ var langchain_callbacks__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! langchain/callbacks */ \"langchain/callbacks\");\n/* harmony import */ var langchain_chains__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! langchain/chains */ \"langchain/chains\");\n/* harmony import */ var langchain_chat_models_openai__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! langchain/chat_models/openai */ \"langchain/chat_models/openai\");\n/* harmony import */ var langchain_llms_openai__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! langchain/llms/openai */ \"langchain/llms/openai\");\n/* harmony import */ var langchain_prompts__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! langchain/prompts */ \"langchain/prompts\");\n/* harmony import */ var _supabase_auth_helpers_nextjs__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @supabase/auth-helpers-nextjs */ \"@supabase/auth-helpers-nextjs\");\n/* harmony import */ var _supabase_auth_helpers_nextjs__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_supabase_auth_helpers_nextjs__WEBPACK_IMPORTED_MODULE_5__);\n/* harmony import */ var _conversationLog__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./conversationLog */ \"(api)/./src/pages/api/conversationLog.ts\");\n/* harmony import */ var _matches__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./matches */ \"(api)/./src/pages/api/matches.ts\");\n/* harmony import */ var _templates__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./templates */ \"(api)/./src/pages/api/templates.ts\");\nvar __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([langchain_callbacks__WEBPACK_IMPORTED_MODULE_0__, langchain_chains__WEBPACK_IMPORTED_MODULE_1__, langchain_chat_models_openai__WEBPACK_IMPORTED_MODULE_2__, langchain_llms_openai__WEBPACK_IMPORTED_MODULE_3__, langchain_prompts__WEBPACK_IMPORTED_MODULE_4__, _matches__WEBPACK_IMPORTED_MODULE_7__]);\n([langchain_callbacks__WEBPACK_IMPORTED_MODULE_0__, langchain_chains__WEBPACK_IMPORTED_MODULE_1__, langchain_chat_models_openai__WEBPACK_IMPORTED_MODULE_2__, langchain_llms_openai__WEBPACK_IMPORTED_MODULE_3__, langchain_prompts__WEBPACK_IMPORTED_MODULE_4__, _matches__WEBPACK_IMPORTED_MODULE_7__] = __webpack_async_dependencies__.then ? (await __webpack_async_dependencies__)() : __webpack_async_dependencies__);\n\n\n\n\n\n\n\n\n\nconst llm = new langchain_llms_openai__WEBPACK_IMPORTED_MODULE_3__.OpenAI({});\nconst handleRequest = async ({ prompt , userId , supabaseAuthedClient  })=>{\n    try {\n        const channel = supabaseAuthedClient.channel(userId);\n        const { data  } = await supabaseAuthedClient.from(\"conversations\").insert({\n            speaker: \"ai\",\n            user_id: userId\n        }).select().single().throwOnError();\n        const interactionId = data?.id;\n        // Retrieve the conversation log and save the user's prompt\n        const conversationLog = new _conversationLog__WEBPACK_IMPORTED_MODULE_6__.ConversationLog(userId);\n        const conversationHistory = await conversationLog.getConversation({\n            limit: 5\n        });\n        await conversationLog.addEntry({\n            entry: prompt,\n            speaker: \"user\"\n        });\n        // Add logic for inquiryChain to improve the user prompt\n        const inquiryChain = new langchain_chains__WEBPACK_IMPORTED_MODULE_1__.LLMChain({\n            llm,\n            prompt: new langchain_prompts__WEBPACK_IMPORTED_MODULE_4__.PromptTemplate({\n                template: _templates__WEBPACK_IMPORTED_MODULE_8__.templates.inquiryTemplate,\n                inputVariables: [\n                    \"userPrompt\",\n                    \"conversationHistory\"\n                ]\n            })\n        });\n        const inquiryChainResult = await inquiryChain.call({\n            userPrompt: prompt,\n            conversationHistory\n        });\n        const inquiry = inquiryChainResult.text;\n        console.log(\"Here is the conversation history: \" + JSON.stringify(conversationHistory, null, 2));\n        // const inquiry = prompt;\n        channel.subscribe(async (status)=>{\n            if (status === \"SUBSCRIBED\") {\n                await channel.send({\n                    type: \"broadcast\",\n                    event: \"chat\",\n                    payload: {\n                        event: \"status\",\n                        message: \"Finding matches...\"\n                    }\n                });\n                const matches = await (0,_matches__WEBPACK_IMPORTED_MODULE_7__.getMatchesFromEmbeddings)(inquiry, supabaseAuthedClient, 2);\n                const urls = matches && Array.from(new Set(matches.map((match)=>{\n                    const metadata = match.metadata;\n                    const { url  } = metadata;\n                    return url;\n                })));\n                const promptTemplate = new langchain_prompts__WEBPACK_IMPORTED_MODULE_4__.PromptTemplate({\n                    template: _templates__WEBPACK_IMPORTED_MODULE_8__.templates.qaTemplate,\n                    inputVariables: [\n                        \"summaries\",\n                        \"question\",\n                        \"conversationHistory\"\n                    ]\n                });\n                let i = 0;\n                const chat = new langchain_chat_models_openai__WEBPACK_IMPORTED_MODULE_2__.ChatOpenAI({\n                    streaming: true,\n                    verbose: true,\n                    modelName: \"gpt-3.5-turbo-16k\",\n                    callbackManager: langchain_callbacks__WEBPACK_IMPORTED_MODULE_0__.CallbackManager.fromHandlers({\n                        async handleLLMNewToken (token) {\n                            const text = token || \"\";\n                            if (![\n                                \"I don't know\",\n                                \"sorry\",\n                                \"Ask another question\"\n                            ].some((el)=>text.toLowerCase().includes(el.toLowerCase()))) {\n                                await channel.send({\n                                    type: \"broadcast\",\n                                    event: \"chat\",\n                                    payload: {\n                                        event: \"response\",\n                                        token,\n                                        interactionId\n                                    }\n                                });\n                            }\n                        },\n                        async handleLLMEnd (result) {\n                            // Store answer in DB\n                            await supabaseAuthedClient.from(\"conversations\").update({\n                                entry: result.generations[0][0].text\n                            }).eq(\"id\", interactionId);\n                            const text = result.generations[0][0].text;\n                            let urlsToReturn = urls;\n                            if ([\n                                \"I don't know\",\n                                \"sorry\",\n                                \"Ask another question\"\n                            ].some((el)=>text.toLowerCase().includes(el.toLowerCase()))) {\n                                urlsToReturn = [\n                                    \"https://www.gov.uk/\"\n                                ];\n                            }\n                            // Here the change is made to send the content instead of the token\n                            await channel.send({\n                                type: \"broadcast\",\n                                event: \"chat\",\n                                payload: {\n                                    event: \"responseEnd\",\n                                    token: text,\n                                    interactionId,\n                                    urls: urlsToReturn\n                                }\n                            });\n                        }\n                    })\n                });\n                const chain = new langchain_chains__WEBPACK_IMPORTED_MODULE_1__.LLMChain({\n                    prompt: promptTemplate,\n                    llm: chat\n                });\n                const summary = matches.map((match)=>match.pageContent ? match.pageContent : \"\").join(\"\\n\");\n                await chain.call({\n                    summaries: summary,\n                    question: prompt,\n                    conversationHistory: conversationHistory\n                });\n            }\n        });\n    } catch (error) {\n        //@ts-ignore\n        console.error(error);\n    }\n};\nasync function handler(req, res) {\n    // Create authenticated Supabase Client\n    const supabase = (0,_supabase_auth_helpers_nextjs__WEBPACK_IMPORTED_MODULE_5__.createPagesServerClient)({\n        req,\n        res\n    }, {\n        options: {\n            realtime: {\n                params: {\n                    eventsPerSecond: -1\n                }\n            }\n        }\n    });\n    const { data: { session  }  } = await supabase.auth.getSession();\n    if (!session) return res.status(401).json({\n        error: \"not_authenticated\",\n        description: \"The user does not have an active session or is not authenticated\"\n    });\n    const { body  } = req;\n    const { prompt  } = body;\n    await handleRequest({\n        prompt,\n        userId: session.user.id,\n        supabaseAuthedClient: supabase\n    });\n    res.status(200).json({\n        message: \"started\"\n    });\n}\n{}\n__webpack_async_result__();\n} catch(e) { __webpack_async_result__(e); } });//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,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WUFDRixDQUFDO1FBQ0g7SUFDRixFQUFFLE9BQU80RCxPQUFPO1FBQ2QsWUFBWTtRQUNaOUMsUUFBUThDLEtBQUssQ0FBQ0E7SUFDaEI7QUFDRjtBQUVlLGVBQWVDLFFBQzVCQyxHQUFtQixFQUNuQkMsR0FBb0IsRUFDcEI7SUFDQSx1Q0FBdUM7SUFDdkMsTUFBTUMsV0FBV3JGLHNGQUF1QkEsQ0FDdEM7UUFBRW1GO1FBQUtDO0lBQUksR0FDWDtRQUNFRSxTQUFTO1lBQ1BDLFVBQVU7Z0JBQ1JDLFFBQVE7b0JBQ05DLGlCQUFpQixDQUFDO2dCQUNwQjtZQUNGO1FBQ0Y7SUFDRjtJQUVGLE1BQU0sRUFDSi9FLE1BQU0sRUFBRWdGLFFBQU8sRUFBRSxHQUNsQixHQUFHLE1BQU1MLFNBQVNNLElBQUksQ0FBQ0MsVUFBVTtJQUVsQyxJQUFJLENBQUNGLFNBQ0gsT0FBT04sSUFBSTVDLE1BQU0sQ0FBQyxLQUFLcUQsSUFBSSxDQUFDO1FBQzFCWixPQUFPO1FBQ1BhLGFBQ0U7SUFDSjtJQUVGLE1BQU0sRUFBRUMsS0FBSSxFQUFFLEdBQUdaO0lBQ2pCLE1BQU0sRUFBRTdFLE9BQU0sRUFBRSxHQUFHeUY7SUFDbkIsTUFBTTFGLGNBQWM7UUFDbEJDO1FBQ0FDLFFBQVFtRixRQUFRTSxJQUFJLENBQUM3RSxFQUFFO1FBQ3ZCWCxzQkFBc0I2RTtJQUN4QjtJQUNBRCxJQUFJNUMsTUFBTSxDQUFDLEtBQUtxRCxJQUFJLENBQUM7UUFBRWhELFNBQVM7SUFBVTtBQUM1QyxDQUFDO0FBRUQsQ0EwQkUsQyIsInNvdXJjZXMiOlsid2VicGFjazovL2NoYXRib3QvLi9zcmMvcGFnZXMvYXBpL2NoYXQudHM/NzI5OCJdLCJzb3VyY2VzQ29udGVudCI6WyJpbXBvcnQgeyBDYWxsYmFja01hbmFnZXIgfSBmcm9tIFwibGFuZ2NoYWluL2NhbGxiYWNrc1wiO1xuaW1wb3J0IHsgTExNQ2hhaW4gfSBmcm9tIFwibGFuZ2NoYWluL2NoYWluc1wiO1xuaW1wb3J0IHsgQ2hhdE9wZW5BSSB9IGZyb20gXCJsYW5nY2hhaW4vY2hhdF9tb2RlbHMvb3BlbmFpXCI7XG5pbXBvcnQgeyBPcGVuQUkgfSBmcm9tIFwibGFuZ2NoYWluL2xsbXMvb3BlbmFpXCI7XG5pbXBvcnQgeyBQcm9tcHRUZW1wbGF0ZSB9IGZyb20gXCJsYW5nY2hhaW4vcHJvbXB0c1wiO1xuaW1wb3J0IHR5cGUgeyBOZXh0QXBpUmVxdWVzdCwgTmV4dEFwaVJlc3BvbnNlIH0gZnJvbSBcIm5leHRcIjtcbmltcG9ydCB7XG4gIGNyZWF0ZVBhZ2VzU2VydmVyQ2xpZW50LFxuICBTdXBhYmFzZUNsaWVudCxcbn0gZnJvbSBcIkBzdXBhYmFzZS9hdXRoLWhlbHBlcnMtbmV4dGpzXCI7XG5cbmltcG9ydCB7IENvbnZlcnNhdGlvbkxvZyB9IGZyb20gXCIuL2NvbnZlcnNhdGlvbkxvZ1wiO1xuaW1wb3J0IHsgTWV0YWRhdGEsIGdldE1hdGNoZXNGcm9tRW1iZWRkaW5ncyB9IGZyb20gXCIuL21hdGNoZXNcIjtcbmltcG9ydCB7IHRlbXBsYXRlcyB9IGZyb20gXCIuL3RlbXBsYXRlc1wiO1xuXG5jb25zdCBsbG0gPSBuZXcgT3BlbkFJKHt9KTtcblxuY29uc3QgaGFuZGxlUmVxdWVzdCA9IGFzeW5jICh7XG4gIHByb21wdCxcbiAgdXNlcklkLFxuICBzdXBhYmFzZUF1dGhlZENsaWVudCxcbn06IHtcbiAgcHJvbXB0OiBzdHJpbmc7XG4gIHVzZXJJZDogc3RyaW5nO1xuICBzdXBhYmFzZUF1dGhlZENsaWVudDogU3VwYWJhc2VDbGllbnQ7XG59KSA9PiB7XG4gIHRyeSB7XG4gICAgY29uc3QgY2hhbm5lbCA9IHN1cGFiYXNlQXV0aGVkQ2xpZW50LmNoYW5uZWwodXNlcklkKTtcbiAgICBjb25zdCB7IGRhdGEgfSA9IGF3YWl0IHN1cGFiYXNlQXV0aGVkQ2xpZW50XG4gICAgICAuZnJvbShcImNvbnZlcnNhdGlvbnNcIilcbiAgICAgIC5pbnNlcnQoeyBzcGVha2VyOiBcImFpXCIsIHVzZXJfaWQ6IHVzZXJJZCB9KVxuICAgICAgLnNlbGVjdCgpXG4gICAgICAuc2luZ2xlKClcbiAgICAgIC50aHJvd09uRXJyb3IoKTtcbiAgICBjb25zdCBpbnRlcmFjdGlvbklkID0gZGF0YT8uaWQ7XG5cbiAgICAvLyBSZXRyaWV2ZSB0aGUgY29udmVyc2F0aW9uIGxvZyBhbmQgc2F2ZSB0aGUgdXNlcidzIHByb21wdFxuICAgIGNvbnN0IGNvbnZlcnNhdGlvbkxvZyA9IG5ldyBDb252ZXJzYXRpb25Mb2codXNlcklkKTtcbiAgICBjb25zdCBjb252ZXJzYXRpb25IaXN0b3J5ID0gYXdhaXQgY29udmVyc2F0aW9uTG9nLmdldENvbnZlcnNhdGlvbih7XG4gICAgICBsaW1pdDogNSxcbiAgICB9KTtcbiAgICBhd2FpdCBjb252ZXJzYXRpb25Mb2cuYWRkRW50cnkoeyBlbnRyeTogcHJvbXB0LCBzcGVha2VyOiBcInVzZXJcIiB9KTtcbiAgICBcbiAgICAvLyBBZGQgbG9naWMgZm9yIGlucXVpcnlDaGFpbiB0byBpbXByb3ZlIHRoZSB1c2VyIHByb21wdFxuY29uc3QgaW5xdWlyeUNoYWluID0gbmV3IExMTUNoYWluKHtcbiAgbGxtLFxuICBwcm9tcHQ6IG5ldyBQcm9tcHRUZW1wbGF0ZSh7XG4gICAgdGVtcGxhdGU6IHRlbXBsYXRlcy5pbnF1aXJ5VGVtcGxhdGUsXG4gICAgaW5wdXRWYXJpYWJsZXM6IFtcInVzZXJQcm9tcHRcIiwgXCJjb252ZXJzYXRpb25IaXN0b3J5XCJdLFxuICB9KSxcbn0pO1xuY29uc3QgaW5xdWlyeUNoYWluUmVzdWx0ID0gYXdhaXQgaW5xdWlyeUNoYWluLmNhbGwoe1xuICB1c2VyUHJvbXB0OiBwcm9tcHQsXG4gIGNvbnZlcnNhdGlvbkhpc3RvcnksXG59KTtcbmNvbnN0IGlucXVpcnk6IHN0cmluZyA9IGlucXVpcnlDaGFpblJlc3VsdC50ZXh0O1xuXG4gICAgY29uc29sZS5sb2coXCJIZXJlIGlzIHRoZSBjb252ZXJzYXRpb24gaGlzdG9yeTogXCIgKyBKU09OLnN0cmluZ2lmeShjb252ZXJzYXRpb25IaXN0b3J5LCBudWxsLCAyKSk7XG5cbiAgICAvLyBjb25zdCBpbnF1aXJ5ID0gcHJvbXB0O1xuXG4gICAgY2hhbm5lbC5zdWJzY3JpYmUoYXN5bmMgKHN0YXR1cykgPT4ge1xuICAgICAgaWYgKHN0YXR1cyA9PT0gXCJTVUJTQ1JJQkVEXCIpIHtcbiAgICAgICAgYXdhaXQgY2hhbm5lbC5zZW5kKHtcbiAgICAgICAgICB0eXBlOiBcImJyb2FkY2FzdFwiLFxuICAgICAgICAgIGV2ZW50OiBcImNoYXRcIixcbiAgICAgICAgICBwYXlsb2FkOiB7XG4gICAgICAgICAgICBldmVudDogXCJzdGF0dXNcIixcbiAgICAgICAgICAgIG1lc3NhZ2U6IFwiRmluZGluZyBtYXRjaGVzLi4uXCIsXG4gICAgICAgICAgfSxcbiAgICAgICAgfSk7XG5cbiAgICAgICAgY29uc3QgbWF0Y2hlcyA9IGF3YWl0IGdldE1hdGNoZXNGcm9tRW1iZWRkaW5ncyhcbiAgICAgICAgICBpbnF1aXJ5LFxuICAgICAgICAgIHN1cGFiYXNlQXV0aGVkQ2xpZW50LFxuICAgICAgICAgIDJcbiAgICAgICAgKTtcblxuICAgICAgICBcblxuICAgICAgICBjb25zdCB1cmxzID1cbiAgICAgICAgICBtYXRjaGVzICYmXG4gICAgICAgICAgQXJyYXkuZnJvbShcbiAgICAgICAgICAgIG5ldyBTZXQoXG4gICAgICAgICAgICAgIG1hdGNoZXMubWFwKChtYXRjaCkgPT4ge1xuICAgICAgICAgICAgICAgIGNvbnN0IG1ldGFkYXRhID0gbWF0Y2gubWV0YWRhdGEgYXMgTWV0YWRhdGE7XG4gICAgICAgICAgICAgICAgY29uc3QgeyB1cmwgfSA9IG1ldGFkYXRhO1xuICAgICAgICAgICAgICAgIHJldHVybiB1cmw7XG4gICAgICAgICAgICAgIH0pXG4gICAgICAgICAgICApXG4gICAgICAgICAgKTtcblxuICAgICAgIFxuXG4gICAgICAgIGNvbnN0IHByb21wdFRlbXBsYXRlID0gbmV3IFByb21wdFRlbXBsYXRlKHtcbiAgICAgICAgICB0ZW1wbGF0ZTogdGVtcGxhdGVzLnFhVGVtcGxhdGUsXG4gICAgICAgICAgaW5wdXRWYXJpYWJsZXM6IFtcbiAgICAgICAgICAgIFwic3VtbWFyaWVzXCIsXG4gICAgICAgICAgICBcInF1ZXN0aW9uXCIsXG4gICAgICAgICAgICBcImNvbnZlcnNhdGlvbkhpc3RvcnlcIixcbiAgICAgICAgICBdLFxuICAgICAgICB9KTtcblxuICAgICAgICBsZXQgaSA9IDA7XG4gICAgICAgIGNvbnN0IGNoYXQgPSBuZXcgQ2hhdE9wZW5BSSh7XG4gICAgICAgICAgc3RyZWFtaW5nOiB0cnVlLFxuICAgICAgICAgIHZlcmJvc2U6IHRydWUsXG4gICAgICAgICAgbW9kZWxOYW1lOiBcImdwdC0zLjUtdHVyYm8tMTZrXCIsXG4gICAgICAgICAgY2FsbGJhY2tNYW5hZ2VyOiBDYWxsYmFja01hbmFnZXIuZnJvbUhhbmRsZXJzKHtcbiAgICAgICAgICAgIGFzeW5jIGhhbmRsZUxMTU5ld1Rva2VuKHRva2VuKSB7XG4gICAgICAgICAgICAgIGNvbnN0IHRleHQgPSB0b2tlbiB8fCBcIlwiO1xuICAgICAgICAgICAgICBpZiAoIVtcIkkgZG9uJ3Qga25vd1wiLCBcInNvcnJ5XCIsIFwiQXNrIGFub3RoZXIgcXVlc3Rpb25cIl0uc29tZShlbCA9PiB0ZXh0LnRvTG93ZXJDYXNlKCkuaW5jbHVkZXMoZWwudG9Mb3dlckNhc2UoKSkpKSB7XG4gICAgICAgICAgICAgICAgYXdhaXQgY2hhbm5lbC5zZW5kKHtcbiAgICAgICAgICAgICAgICAgIHR5cGU6IFwiYnJvYWRjYXN0XCIsXG4gICAgICAgICAgICAgICAgICBldmVudDogXCJjaGF0XCIsXG4gICAgICAgICAgICAgICAgICBwYXlsb2FkOiB7XG4gICAgICAgICAgICAgICAgICAgIGV2ZW50OiBcInJlc3BvbnNlXCIsXG4gICAgICAgICAgICAgICAgICAgIHRva2VuLFxuICAgICAgICAgICAgICAgICAgICBpbnRlcmFjdGlvbklkLFxuICAgICAgICAgICAgICAgICAgfSxcbiAgICAgICAgICAgICAgICB9KTtcbiAgICAgICAgICAgICAgfVxuICAgICAgICAgICAgfSxcbiAgICAgICAgICAgIGFzeW5jIGhhbmRsZUxMTUVuZChyZXN1bHQpIHtcbiAgICAgICAgICAgICAgLy8gU3RvcmUgYW5zd2VyIGluIERCXG4gICAgICAgICAgICAgIGF3YWl0IHN1cGFiYXNlQXV0aGVkQ2xpZW50XG4gICAgICAgICAgICAgICAgLmZyb20oXCJjb252ZXJzYXRpb25zXCIpXG4gICAgICAgICAgICAgICAgLnVwZGF0ZSh7IGVudHJ5OiByZXN1bHQuZ2VuZXJhdGlvbnNbMF1bMF0udGV4dCB9KVxuICAgICAgICAgICAgICAgIC5lcShcImlkXCIsIGludGVyYWN0aW9uSWQpO1xuICAgICAgICBcbiAgICAgICAgICAgICAgY29uc3QgdGV4dCA9IHJlc3VsdC5nZW5lcmF0aW9uc1swXVswXS50ZXh0O1xuICAgICAgICAgICAgICBsZXQgdXJsc1RvUmV0dXJuID0gdXJscztcbiAgICAgICAgXG4gICAgICAgICAgICAgIGlmIChbXCJJIGRvbid0IGtub3dcIiwgXCJzb3JyeVwiLCBcIkFzayBhbm90aGVyIHF1ZXN0aW9uXCJdLnNvbWUoZWwgPT4gdGV4dC50b0xvd2VyQ2FzZSgpLmluY2x1ZGVzKGVsLnRvTG93ZXJDYXNlKCkpKSkge1xuICAgICAgICAgICAgICAgIHVybHNUb1JldHVybiA9IFtcImh0dHBzOi8vd3d3Lmdvdi51ay9cIl07XG4gICAgICAgICAgICAgIH0gICAgICAgICAgICAgIFxuICAgICAgICAgICAgICBcbiAgICAgICAgICAgICAgLy8gSGVyZSB0aGUgY2hhbmdlIGlzIG1hZGUgdG8gc2VuZCB0aGUgY29udGVudCBpbnN0ZWFkIG9mIHRoZSB0b2tlblxuICAgICAgICAgICAgICBhd2FpdCBjaGFubmVsLnNlbmQoe1xuICAgICAgICAgICAgICAgIHR5cGU6IFwiYnJvYWRjYXN0XCIsXG4gICAgICAgICAgICAgICAgZXZlbnQ6IFwiY2hhdFwiLFxuICAgICAgICAgICAgICAgIHBheWxvYWQ6IHtcbiAgICAgICAgICAgICAgICAgIGV2ZW50OiBcInJlc3BvbnNlRW5kXCIsXG4gICAgICAgICAgICAgICAgICB0b2tlbjogdGV4dCxcbiAgICAgICAgICAgICAgICAgIGludGVyYWN0aW9uSWQsXG4gICAgICAgICAgICAgICAgICB1cmxzOiB1cmxzVG9SZXR1cm4sXG4gICAgICAgICAgICAgICAgfSxcbiAgICAgICAgICAgICAgfSk7XG4gICAgICAgICAgICB9LFxuICAgICAgICAgIH0pLFxuICAgICAgICB9KTtcbiAgICAgICAgXG5cbiAgICAgICAgY29uc3QgY2hhaW4gPSBuZXcgTExNQ2hhaW4oe1xuICAgICAgICAgIHByb21wdDogcHJvbXB0VGVtcGxhdGUsXG4gICAgICAgICAgbGxtOiBjaGF0LFxuICAgICAgICB9KTtcblxuICAgICAgICBjb25zdCBzdW1tYXJ5ID0gbWF0Y2hlcy5tYXAobWF0Y2ggPT4gbWF0Y2gucGFnZUNvbnRlbnQgPyBtYXRjaC5wYWdlQ29udGVudCA6ICcnKS5qb2luKFwiXFxuXCIpO1xuXG4gICAgICAgIGF3YWl0IGNoYWluLmNhbGwoe1xuICAgICAgICAgIHN1bW1hcmllczogc3VtbWFyeSxcbiAgICAgICAgICBxdWVzdGlvbjogcHJvbXB0LFxuICAgICAgICAgIGNvbnZlcnNhdGlvbkhpc3Rvcnk6IGNvbnZlcnNhdGlvbkhpc3RvcnksXG4gICAgICAgIH0pO1xuICAgICAgfVxuICAgIH0pO1xuICB9IGNhdGNoIChlcnJvcikge1xuICAgIC8vQHRzLWlnbm9yZVxuICAgIGNvbnNvbGUuZXJyb3IoZXJyb3IpO1xuICB9XG59O1xuXG5leHBvcnQgZGVmYXVsdCBhc3luYyBmdW5jdGlvbiBoYW5kbGVyKFxuICByZXE6IE5leHRBcGlSZXF1ZXN0LFxuICByZXM6IE5leHRBcGlSZXNwb25zZVxuKSB7XG4gIC8vIENyZWF0ZSBhdXRoZW50aWNhdGVkIFN1cGFiYXNlIENsaWVudFxuICBjb25zdCBzdXBhYmFzZSA9IGNyZWF0ZVBhZ2VzU2VydmVyQ2xpZW50KFxuICAgIHsgcmVxLCByZXMgfSxcbiAgICB7XG4gICAgICBvcHRpb25zOiB7XG4gICAgICAgIHJlYWx0aW1lOiB7XG4gICAgICAgICAgcGFyYW1zOiB7XG4gICAgICAgICAgICBldmVudHNQZXJTZWNvbmQ6IC0xLFxuICAgICAgICAgIH0sXG4gICAgICAgIH0sXG4gICAgICB9LFxuICAgIH1cbiAgKTtcbiAgY29uc3Qge1xuICAgIGRhdGE6IHsgc2Vzc2lvbiB9LFxuICB9ID0gYXdhaXQgc3VwYWJhc2UuYXV0aC5nZXRTZXNzaW9uKCk7XG5cbiAgaWYgKCFzZXNzaW9uKVxuICAgIHJldHVybiByZXMuc3RhdHVzKDQwMSkuanNvbih7XG4gICAgICBlcnJvcjogXCJub3RfYXV0aGVudGljYXRlZFwiLFxuICAgICAgZGVzY3JpcHRpb246XG4gICAgICAgIFwiVGhlIHVzZXIgZG9lcyBub3QgaGF2ZSBhbiBhY3RpdmUgc2Vzc2lvbiBvciBpcyBub3QgYXV0aGVudGljYXRlZFwiLFxuICAgIH0pO1xuXG4gIGNvbnN0IHsgYm9keSB9ID0gcmVxO1xuICBjb25zdCB7IHByb21wdCB9ID0gYm9keTtcbiAgYXdhaXQgaGFuZGxlUmVxdWVzdCh7XG4gICAgcHJvbXB0LFxuICAgIHVzZXJJZDogc2Vzc2lvbi51c2VyLmlkLFxuICAgIHN1cGFiYXNlQXV0aGVkQ2xpZW50OiBzdXBhYmFzZSxcbiAgfSk7XG4gIHJlcy5zdGF0dXMoMjAwKS5qc29uKHsgbWVzc2FnZTogXCJzdGFydGVkXCIgfSk7XG59XG5cbnsvKiBcblxuSGVyZSdzIGFuIGV4YW1wbGUgb2YgaG93IHRvIGZpeCB0aGlzOlxuXG5jb25zdCBpbnF1aXJ5Q2hhaW5SZXN1bHQgPSBhd2FpdCBpbnF1aXJ5Q2hhaW4uY2FsbCh7XG4gIHVzZXJQcm9tcHQ6IHByb21wdCxcbiAgY29udmVyc2F0aW9uSGlzdG9yeSxcbn0pO1xuY29uc3QgaW5xdWlyeTogc3RyaW5nID0gaW5xdWlyeUNoYWluUmVzdWx0LnRleHQ7XG5cbmNvbnNvbGUubG9nKFwiSGVyZSBpcyB0aGUgY29udmVyc2F0aW9uIGhpc3Rvcnk6IFwiICsgSlNPTi5zdHJpbmdpZnkoY29udmVyc2F0aW9uSGlzdG9yeSwgbnVsbCwgMikpO1xuLy8gUmVtb3ZlZCB0aGUgbGluZTogY29uc3QgaW5xdWlyeSA9IHByb21wdDtcblxuT3I6XG5cbmNvbnN0IGlucXVpcnlDaGFpblJlc3VsdCA9IGF3YWl0IGlucXVpcnlDaGFpbi5jYWxsKHtcbiAgdXNlclByb21wdDogcHJvbXB0LFxuICBjb252ZXJzYXRpb25IaXN0b3J5LFxufSk7XG4vLyBSZW1vdmVkIHRoZSBsaW5lOiBjb25zdCBpbnF1aXJ5OiBzdHJpbmcgPSBpbnF1aXJ5Q2hhaW5SZXN1bHQudGV4dDtcblxuY29uc29sZS5sb2coXCJIZXJlIGlzIHRoZSBjb252ZXJzYXRpb24gaGlzdG9yeTogXCIgKyBKU09OLnN0cmluZ2lmeShjb252ZXJzYXRpb25IaXN0b3J5LCBudWxsLCAyKSk7XG5cbmNvbnN0IGlucXVpcnkgPSBwcm9tcHQ7XG5Zb3UgY2FuIHBpY2sgZWl0aGVyIG9mIHRoZXNlIHNvbHV0aW9ucyBiYXNlZCBvbiB3aGV0aGVyIHlvdSB3YW50IGlucXVpcnkgdG8gaG9sZCB0aGUgdmFsdWUgb2YgaW5xdWlyeUNoYWluUmVzdWx0LnRleHQgb3IgcHJvbXB0LlxuXG4qL30iXSwibmFtZXMiOlsiQ2FsbGJhY2tNYW5hZ2VyIiwiTExNQ2hhaW4iLCJDaGF0T3BlbkFJIiwiT3BlbkFJIiwiUHJvbXB0VGVtcGxhdGUiLCJjcmVhdGVQYWdlc1NlcnZlckNsaWVudCIsIkNvbnZlcnNhdGlvbkxvZyIsImdldE1hdGNoZXNGcm9tRW1iZWRkaW5ncyIsInRlbXBsYXRlcyIsImxsbSIsImhhbmRsZVJlcXVlc3QiLCJwcm9tcHQiLCJ1c2VySWQiLCJzdXBhYmFzZUF1dGhlZENsaWVudCIsImNoYW5uZWwiLCJkYXRhIiwiZnJvbSIsImluc2VydCIsInNwZWFrZXIiLCJ1c2VyX2lkIiwic2VsZWN0Iiwic2luZ2xlIiwidGhyb3dPbkVycm9yIiwiaW50ZXJhY3Rpb25JZCIsImlkIiwiY29udmVyc2F0aW9uTG9nIiwiY29udmVyc2F0aW9uSGlzdG9yeSIsImdldENvbnZlcnNhdGlvbiIsImxpbWl0IiwiYWRkRW50cnkiLCJlbnRyeSIsImlucXVpcnlDaGFpbiIsInRlbXBsYXRlIiwiaW5xdWlyeVRlbXBsYXRlIiwiaW5wdXRWYXJpYWJsZXMiLCJpbnF1aXJ5Q2hhaW5SZXN1bHQiLCJjYWxsIiwidXNlclByb21wdCIsImlucXVpcnkiLCJ0ZXh0IiwiY29uc29sZSIsImxvZyIsIkpTT04iLCJzdHJpbmdpZnkiLCJzdWJzY3JpYmUiLCJzdGF0dXMiLCJzZW5kIiwidHlwZSIsImV2ZW50IiwicGF5bG9hZCIsIm1lc3NhZ2UiLCJtYXRjaGVzIiwidXJscyIsIkFycmF5IiwiU2V0IiwibWFwIiwibWF0Y2giLCJtZXRhZGF0YSIsInVybCIsInByb21wdFRlbXBsYXRlIiwicWFUZW1wbGF0ZSIsImkiLCJjaGF0Iiwic3RyZWFtaW5nIiwidmVyYm9zZSIsIm1vZGVsTmFtZSIsImNhbGxiYWNrTWFuYWdlciIsImZyb21IYW5kbGVycyIsImhhbmRsZUxMTU5ld1Rva2VuIiwidG9rZW4iLCJzb21lIiwiZWwiLCJ0b0xvd2VyQ2FzZSIsImluY2x1ZGVzIiwiaGFuZGxlTExNRW5kIiwicmVzdWx0IiwidXBkYXRlIiwiZ2VuZXJhdGlvbnMiLCJlcSIsInVybHNUb1JldHVybiIsImNoYWluIiwic3VtbWFyeSIsInBhZ2VDb250ZW50Iiwiam9pbiIsInN1bW1hcmllcyIsInF1ZXN0aW9uIiwiZXJyb3IiLCJoYW5kbGVyIiwicmVxIiwicmVzIiwic3VwYWJhc2UiLCJvcHRpb25zIiwicmVhbHRpbWUiLCJwYXJhbXMiLCJldmVudHNQZXJTZWNvbmQiLCJzZXNzaW9uIiwiYXV0aCIsImdldFNlc3Npb24iLCJqc29uIiwiZGVzY3JpcHRpb24iLCJib2R5IiwidXNlciJdLCJzb3VyY2VSb290IjoiIn0=\n//# sourceURL=webpack-internal:///(api)/./src/pages/api/chat.ts\n");
 
 /***/ }),
 
-/***/ 52:
+/***/ "(api)/./src/pages/api/conversationLog.ts":
+/*!******************************************!*\
+  !*** ./src/pages/api/conversationLog.ts ***!
+  \******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"ConversationLog\": () => (/* binding */ ConversationLog)\n/* harmony export */ });\n/* harmony import */ var utils_supabaseAdmin__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! utils/supabaseAdmin */ \"(api)/./src/utils/supabaseAdmin.ts\");\n\nclass ConversationLog {\n    constructor(userId){\n        this.userId = userId;\n        this.userId = userId;\n    }\n    async addEntry({ entry , speaker  }) {\n        try {\n            await utils_supabaseAdmin__WEBPACK_IMPORTED_MODULE_0__.supabaseAdminClient.from(\"conversations\").insert({\n                user_id: this.userId,\n                entry,\n                speaker\n            }).throwOnError();\n        } catch (e) {\n            console.log(`Error adding entry: ${e}`);\n        }\n    }\n    async getConversation({ limit  }) {\n        const { data: history  } = await utils_supabaseAdmin__WEBPACK_IMPORTED_MODULE_0__.supabaseAdminClient.from(\"conversations\").select(\"entry, speaker, created_at\").eq(\"user_id\", this.userId).order(\"created_at\", {\n            ascending: false\n        }).limit(limit).throwOnError();\n        const response = history ? history.map((entry)=>{\n            return `${entry.speaker.toUpperCase()}: ${entry.entry}`;\n        }).reverse() : [];\n        return response;\n    }\n    async clearConversation() {\n        await utils_supabaseAdmin__WEBPACK_IMPORTED_MODULE_0__.supabaseAdminClient.from(\"conversations\").delete().eq(\"user_id\", this.userId).throwOnError();\n    }\n}\n\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiKGFwaSkvLi9zcmMvcGFnZXMvYXBpL2NvbnZlcnNhdGlvbkxvZy50cy5qcyIsIm1hcHBpbmdzIjoiOzs7OztBQUEwRDtBQUUxRCxNQUFNQztJQUNKQyxZQUFtQkMsT0FBZ0I7c0JBQWhCQTtRQUNqQixJQUFJLENBQUNBLE1BQU0sR0FBR0E7SUFDaEI7SUFFQSxNQUFhQyxTQUFTLEVBQ3BCQyxNQUFLLEVBQ0xDLFFBQU8sRUFJUixFQUFFO1FBQ0QsSUFBSTtZQUNGLE1BQU1OLHlFQUNDLENBQUMsaUJBQ0xRLE1BQU0sQ0FBQztnQkFBRUMsU0FBUyxJQUFJLENBQUNOLE1BQU07Z0JBQUVFO2dCQUFPQztZQUFRLEdBQzlDSSxZQUFZO1FBQ2pCLEVBQUUsT0FBT0MsR0FBRztZQUNWQyxRQUFRQyxHQUFHLENBQUMsQ0FBQyxvQkFBb0IsRUFBRUYsRUFBRSxDQUFDO1FBQ3hDO0lBQ0Y7SUFFQSxNQUFhRyxnQkFBZ0IsRUFDM0JDLE1BQUssRUFHTixFQUFxQjtRQUNwQixNQUFNLEVBQUVDLE1BQU1DLFFBQU8sRUFBRSxHQUFHLE1BQU1qQix5RUFDekIsQ0FBQyxpQkFDTGtCLE1BQU0sQ0FBQyw4QkFDUEMsRUFBRSxDQUFDLFdBQVcsSUFBSSxDQUFDaEIsTUFBTSxFQUN6QmlCLEtBQUssQ0FBQyxjQUFjO1lBQUVDLFdBQVcsS0FBSztRQUFDLEdBQ3ZDTixLQUFLLENBQUNBLE9BQ05MLFlBQVk7UUFFZixNQUFNWSxXQUFXTCxVQUNiQSxRQUNHTSxHQUFHLENBQUMsQ0FBQ2xCLFFBQVU7WUFDZCxPQUFPLENBQUMsRUFBRUEsTUFBTUMsT0FBTyxDQUFDa0IsV0FBVyxHQUFHLEVBQUUsRUFBRW5CLE1BQU1BLEtBQUssQ0FBQyxDQUFDO1FBQ3pELEdBQ0NvQixPQUFPLEtBQ1YsRUFBRTtRQUNOLE9BQU9IO0lBQ1Q7SUFFQSxNQUFhSSxvQkFBb0I7UUFDL0IsTUFBTTFCLHlFQUNDLENBQUMsaUJBQ0wyQixNQUFNLEdBQ05SLEVBQUUsQ0FBQyxXQUFXLElBQUksQ0FBQ2hCLE1BQU0sRUFDekJPLFlBQVk7SUFDakI7QUFDRjtBQUUyQiIsInNvdXJjZXMiOlsid2VicGFjazovL2NoYXRib3QvLi9zcmMvcGFnZXMvYXBpL2NvbnZlcnNhdGlvbkxvZy50cz85NzJhIl0sInNvdXJjZXNDb250ZW50IjpbImltcG9ydCB7IHN1cGFiYXNlQWRtaW5DbGllbnQgfSBmcm9tIFwidXRpbHMvc3VwYWJhc2VBZG1pblwiO1xuXG5jbGFzcyBDb252ZXJzYXRpb25Mb2cge1xuICBjb25zdHJ1Y3RvcihwdWJsaWMgdXNlcklkOiBzdHJpbmcpIHtcbiAgICB0aGlzLnVzZXJJZCA9IHVzZXJJZDtcbiAgfVxuXG4gIHB1YmxpYyBhc3luYyBhZGRFbnRyeSh7XG4gICAgZW50cnksXG4gICAgc3BlYWtlcixcbiAgfToge1xuICAgIGVudHJ5OiBzdHJpbmc7XG4gICAgc3BlYWtlcjogXCJ1c2VyXCIgfCBcImFpXCI7XG4gIH0pIHtcbiAgICB0cnkge1xuICAgICAgYXdhaXQgc3VwYWJhc2VBZG1pbkNsaWVudFxuICAgICAgICAuZnJvbShcImNvbnZlcnNhdGlvbnNcIilcbiAgICAgICAgLmluc2VydCh7IHVzZXJfaWQ6IHRoaXMudXNlcklkLCBlbnRyeSwgc3BlYWtlciB9KVxuICAgICAgICAudGhyb3dPbkVycm9yKCk7XG4gICAgfSBjYXRjaCAoZSkge1xuICAgICAgY29uc29sZS5sb2coYEVycm9yIGFkZGluZyBlbnRyeTogJHtlfWApO1xuICAgIH1cbiAgfVxuXG4gIHB1YmxpYyBhc3luYyBnZXRDb252ZXJzYXRpb24oe1xuICAgIGxpbWl0LFxuICB9OiB7XG4gICAgbGltaXQ6IG51bWJlcjtcbiAgfSk6IFByb21pc2U8c3RyaW5nW10+IHtcbiAgICBjb25zdCB7IGRhdGE6IGhpc3RvcnkgfSA9IGF3YWl0IHN1cGFiYXNlQWRtaW5DbGllbnRcbiAgICAgIC5mcm9tKFwiY29udmVyc2F0aW9uc1wiKVxuICAgICAgLnNlbGVjdChcImVudHJ5LCBzcGVha2VyLCBjcmVhdGVkX2F0XCIpXG4gICAgICAuZXEoXCJ1c2VyX2lkXCIsIHRoaXMudXNlcklkKVxuICAgICAgLm9yZGVyKFwiY3JlYXRlZF9hdFwiLCB7IGFzY2VuZGluZzogZmFsc2UgfSlcbiAgICAgIC5saW1pdChsaW1pdClcbiAgICAgIC50aHJvd09uRXJyb3IoKTtcblxuICAgIGNvbnN0IHJlc3BvbnNlID0gaGlzdG9yeVxuICAgICAgPyBoaXN0b3J5XG4gICAgICAgICAgLm1hcCgoZW50cnkpID0+IHtcbiAgICAgICAgICAgIHJldHVybiBgJHtlbnRyeS5zcGVha2VyLnRvVXBwZXJDYXNlKCl9OiAke2VudHJ5LmVudHJ5fWA7XG4gICAgICAgICAgfSlcbiAgICAgICAgICAucmV2ZXJzZSgpXG4gICAgICA6IFtdO1xuICAgIHJldHVybiByZXNwb25zZTtcbiAgfVxuXG4gIHB1YmxpYyBhc3luYyBjbGVhckNvbnZlcnNhdGlvbigpIHtcbiAgICBhd2FpdCBzdXBhYmFzZUFkbWluQ2xpZW50XG4gICAgICAuZnJvbShcImNvbnZlcnNhdGlvbnNcIilcbiAgICAgIC5kZWxldGUoKVxuICAgICAgLmVxKFwidXNlcl9pZFwiLCB0aGlzLnVzZXJJZClcbiAgICAgIC50aHJvd09uRXJyb3IoKTtcbiAgfVxufVxuXG5leHBvcnQgeyBDb252ZXJzYXRpb25Mb2cgfTtcbiJdLCJuYW1lcyI6WyJzdXBhYmFzZUFkbWluQ2xpZW50IiwiQ29udmVyc2F0aW9uTG9nIiwiY29uc3RydWN0b3IiLCJ1c2VySWQiLCJhZGRFbnRyeSIsImVudHJ5Iiwic3BlYWtlciIsImZyb20iLCJpbnNlcnQiLCJ1c2VyX2lkIiwidGhyb3dPbkVycm9yIiwiZSIsImNvbnNvbGUiLCJsb2ciLCJnZXRDb252ZXJzYXRpb24iLCJsaW1pdCIsImRhdGEiLCJoaXN0b3J5Iiwic2VsZWN0IiwiZXEiLCJvcmRlciIsImFzY2VuZGluZyIsInJlc3BvbnNlIiwibWFwIiwidG9VcHBlckNhc2UiLCJyZXZlcnNlIiwiY2xlYXJDb252ZXJzYXRpb24iLCJkZWxldGUiXSwic291cmNlUm9vdCI6IiJ9\n//# sourceURL=webpack-internal:///(api)/./src/pages/api/conversationLog.ts\n");
+
+/***/ }),
+
+/***/ "(api)/./src/pages/api/matches.ts":
+/*!**********************************!*\
+  !*** ./src/pages/api/matches.ts ***!
+  \**********************************/
 /***/ ((module, __webpack_exports__, __webpack_require__) => {
 
-__webpack_require__.a(module, async (__webpack_handle_async_dependencies__, __webpack_async_result__) => { try {
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "getMatchesFromEmbeddings": () => (/* binding */ getMatchesFromEmbeddings)
-/* harmony export */ });
-/* harmony import */ var langchain_embeddings_openai__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(405);
-/* harmony import */ var langchain_vectorstores_supabase__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(230);
-var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([langchain_embeddings_openai__WEBPACK_IMPORTED_MODULE_0__, langchain_vectorstores_supabase__WEBPACK_IMPORTED_MODULE_1__]);
-([langchain_embeddings_openai__WEBPACK_IMPORTED_MODULE_0__, langchain_vectorstores_supabase__WEBPACK_IMPORTED_MODULE_1__] = __webpack_async_dependencies__.then ? (await __webpack_async_dependencies__)() : __webpack_async_dependencies__);
+eval("__webpack_require__.a(module, async (__webpack_handle_async_dependencies__, __webpack_async_result__) => { try {\n__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"getMatchesFromEmbeddings\": () => (/* binding */ getMatchesFromEmbeddings)\n/* harmony export */ });\n/* harmony import */ var langchain_embeddings_openai__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! langchain/embeddings/openai */ \"langchain/embeddings/openai\");\n/* harmony import */ var langchain_vectorstores_supabase__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! langchain/vectorstores/supabase */ \"langchain/vectorstores/supabase\");\nvar __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([langchain_embeddings_openai__WEBPACK_IMPORTED_MODULE_0__, langchain_vectorstores_supabase__WEBPACK_IMPORTED_MODULE_1__]);\n([langchain_embeddings_openai__WEBPACK_IMPORTED_MODULE_0__, langchain_vectorstores_supabase__WEBPACK_IMPORTED_MODULE_1__] = __webpack_async_dependencies__.then ? (await __webpack_async_dependencies__)() : __webpack_async_dependencies__);\n\n\nconst getMatchesFromEmbeddings = async (inquiry, client, topK)=>{\n    const embeddings = new langchain_embeddings_openai__WEBPACK_IMPORTED_MODULE_0__.OpenAIEmbeddings();\n    const store = new langchain_vectorstores_supabase__WEBPACK_IMPORTED_MODULE_1__.SupabaseVectorStore(embeddings, {\n        client,\n        tableName: \"documents\"\n    });\n    try {\n        const queryResult = await store.similaritySearch(inquiry, topK);\n        return queryResult.map((match)=>({\n                ...match,\n                metadata: match.metadata\n            })) || [];\n    } catch (e) {\n        console.log(\"Error querying embeddings: \", e);\n        throw new Error(`Error querying embeddings: ${e}`);\n    }\n};\n\n\n__webpack_async_result__();\n} catch(e) { __webpack_async_result__(e); } });//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiKGFwaSkvLi9zcmMvcGFnZXMvYXBpL21hdGNoZXMudHMuanMiLCJtYXBwaW5ncyI6Ijs7Ozs7Ozs7O0FBQytEO0FBQ087QUFRdEUsTUFBTUUsMkJBQTJCLE9BQy9CQyxTQUNBQyxRQUNBQyxPQUNHO0lBQ0gsTUFBTUMsYUFBYSxJQUFJTix5RUFBZ0JBO0lBRXZDLE1BQU1PLFFBQVEsSUFBSU4sZ0ZBQW1CQSxDQUFDSyxZQUFZO1FBQ2hERjtRQUNBSSxXQUFXO0lBQ2I7SUFDQSxJQUFJO1FBQ0YsTUFBTUMsY0FBYyxNQUFNRixNQUFNRyxnQkFBZ0IsQ0FBQ1AsU0FBU0U7UUFDMUQsT0FDRUksWUFBWUUsR0FBRyxDQUFDLENBQUNDLFFBQVc7Z0JBQzFCLEdBQUdBLEtBQUs7Z0JBQ1JDLFVBQVVELE1BQU1DLFFBQVE7WUFDMUIsT0FBTyxFQUFFO0lBRWIsRUFBRSxPQUFPQyxHQUFHO1FBQ1ZDLFFBQVFDLEdBQUcsQ0FBQywrQkFBK0JGO1FBQzNDLE1BQU0sSUFBSUcsTUFBTSxDQUFDLDJCQUEyQixFQUFFSCxFQUFFLENBQUMsRUFBRTtJQUNyRDtBQUNGO0FBRW9DIiwic291cmNlcyI6WyJ3ZWJwYWNrOi8vY2hhdGJvdC8uL3NyYy9wYWdlcy9hcGkvbWF0Y2hlcy50cz82MTAyIl0sInNvdXJjZXNDb250ZW50IjpbImltcG9ydCB7IFN1cGFiYXNlQ2xpZW50IH0gZnJvbSBcIkBzdXBhYmFzZS9zdXBhYmFzZS1qc1wiO1xuaW1wb3J0IHsgT3BlbkFJRW1iZWRkaW5ncyB9IGZyb20gXCJsYW5nY2hhaW4vZW1iZWRkaW5ncy9vcGVuYWlcIjtcbmltcG9ydCB7IFN1cGFiYXNlVmVjdG9yU3RvcmUgfSBmcm9tIFwibGFuZ2NoYWluL3ZlY3RvcnN0b3Jlcy9zdXBhYmFzZVwiO1xuXG5leHBvcnQgdHlwZSBNZXRhZGF0YSA9IHtcbiAgdXJsOiBzdHJpbmc7XG4gIHRleHQ6IHN0cmluZztcbiAgY2h1bms6IHN0cmluZztcbn07XG5cbmNvbnN0IGdldE1hdGNoZXNGcm9tRW1iZWRkaW5ncyA9IGFzeW5jIChcbiAgaW5xdWlyeTogc3RyaW5nLFxuICBjbGllbnQ6IFN1cGFiYXNlQ2xpZW50LFxuICB0b3BLOiBudW1iZXJcbikgPT4ge1xuICBjb25zdCBlbWJlZGRpbmdzID0gbmV3IE9wZW5BSUVtYmVkZGluZ3MoKTtcblxuICBjb25zdCBzdG9yZSA9IG5ldyBTdXBhYmFzZVZlY3RvclN0b3JlKGVtYmVkZGluZ3MsIHtcbiAgICBjbGllbnQsXG4gICAgdGFibGVOYW1lOiBcImRvY3VtZW50c1wiLFxuICB9KTtcbiAgdHJ5IHtcbiAgICBjb25zdCBxdWVyeVJlc3VsdCA9IGF3YWl0IHN0b3JlLnNpbWlsYXJpdHlTZWFyY2goaW5xdWlyeSwgdG9wSyk7XG4gICAgcmV0dXJuIChcbiAgICAgIHF1ZXJ5UmVzdWx0Lm1hcCgobWF0Y2gpID0+ICh7XG4gICAgICAgIC4uLm1hdGNoLFxuICAgICAgICBtZXRhZGF0YTogbWF0Y2gubWV0YWRhdGEgYXMgTWV0YWRhdGEsXG4gICAgICB9KSkgfHwgW11cbiAgICApO1xuICB9IGNhdGNoIChlKSB7XG4gICAgY29uc29sZS5sb2coXCJFcnJvciBxdWVyeWluZyBlbWJlZGRpbmdzOiBcIiwgZSk7XG4gICAgdGhyb3cgbmV3IEVycm9yKGBFcnJvciBxdWVyeWluZyBlbWJlZGRpbmdzOiAke2V9YCk7XG4gIH1cbn07XG5cbmV4cG9ydCB7IGdldE1hdGNoZXNGcm9tRW1iZWRkaW5ncyB9O1xuIl0sIm5hbWVzIjpbIk9wZW5BSUVtYmVkZGluZ3MiLCJTdXBhYmFzZVZlY3RvclN0b3JlIiwiZ2V0TWF0Y2hlc0Zyb21FbWJlZGRpbmdzIiwiaW5xdWlyeSIsImNsaWVudCIsInRvcEsiLCJlbWJlZGRpbmdzIiwic3RvcmUiLCJ0YWJsZU5hbWUiLCJxdWVyeVJlc3VsdCIsInNpbWlsYXJpdHlTZWFyY2giLCJtYXAiLCJtYXRjaCIsIm1ldGFkYXRhIiwiZSIsImNvbnNvbGUiLCJsb2ciLCJFcnJvciJdLCJzb3VyY2VSb290IjoiIn0=\n//# sourceURL=webpack-internal:///(api)/./src/pages/api/matches.ts\n");
 
+/***/ }),
 
-const getMatchesFromEmbeddings = async (inquiry, client, topK)=>{
-    const embeddings = new langchain_embeddings_openai__WEBPACK_IMPORTED_MODULE_0__.OpenAIEmbeddings();
-    const store = new langchain_vectorstores_supabase__WEBPACK_IMPORTED_MODULE_1__.SupabaseVectorStore(embeddings, {
-        client,
-        tableName: "documents"
-    });
-    try {
-        const queryResult = await store.similaritySearch(inquiry, topK);
-        return queryResult.map((match)=>({
-                ...match,
-                metadata: match.metadata
-            })) || [];
-    } catch (e) {
-        console.log("Error querying embeddings: ", e);
-        throw new Error(`Error querying embeddings: ${e}`);
-    }
-};
+/***/ "(api)/./src/pages/api/templates.ts":
+/*!************************************!*\
+  !*** ./src/pages/api/templates.ts ***!
+  \************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"templates\": () => (/* binding */ templates)\n/* harmony export */ });\nconst templates = {\n    qaTemplate: `You are a helpful chatbot that provides answers to users on the GOV.UK website. Answer the question based on the context below. You should follow all the following rules when generating an answer:\n  - There will be a chat history, context from GOV.UK website, and a question.\n  - Your main goal is to provide the user with an answer based on the context you are given.\n  - Do not make up any answers if the context from the GOV.UK website does not have relevant information.\n  - Always prefer the result with the highest \"score\" value.\n  - The answer should only be based on the context. Do not use any external sources. Do not generate the response based on the question without clear reference to the context.\n  - Summarize the context to make it easier to read, but don't omit any information.\n  - If there is no context do not make an answer up. Simply answer \"I'm sorry, I don't understand. Trying asking another question or try visiting gov.uk.\"\n  \n  Chat history: {conversationHistory}\n  \n  Context from GOV.UK website: {summaries}\n  \n  Question: {question}\n  \n  Final Answer:  `,\n    summarizerTemplate: `Shorten the text in the content, attempting to answer the inquiry You should follow the following rules when generating the summary:\n      - The summary will answer the inquiry. If it cannot be answered, the summary should be empty, and no text should be returned in the final answer at all.\n      - If the inquiry cannot be answered, the final answer should be empty.\n      - The summary should be under 4000 characters.\n      - The summary should be 2000 characters long, if possible.\n  \n      Inquiry: {inquiry}\n      Content: {document}\n  \n      Final answer:\n      `,\n    summarizerDocumentTemplate: `Summarize the text in the content. You should follow the following rules when generating the summary:\n      - The summary should be under 4000 characters.\n      - The summary should be at least 1500 characters long, if possible.\n  \n      Content: {document}\n  \n      Final answer:\n      `,\n    inquiryTemplate: `Given the following user prompt and chat history, formulate a question that would be the most relevant to provide the user with an answer from a knowledge base.\n      You should follow the following rules when generating and answer:\n      - Always prioritize the user prompt over the chat history.\n      - Ignore any chat history that is not directly related to the user prompt.\n      - Only attempt to answer if a question was posed.\n      - The question should be a single sentence\n      - You should remove any punctuation from the question\n      - You should remove any words that are not relevant to the question\n      - If you are unable to formulate a question, respond with the same user prompt you got.\n  \n      User prompt: {userPrompt}\n  \n      Chat history: {conversationHistory}\n  \n      Final answer:\n      `,\n    summerierTemplate: `Summarize the following text. You should follow the following rules when generating and answer:`\n};\n\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiKGFwaSkvLi9zcmMvcGFnZXMvYXBpL3RlbXBsYXRlcy50cy5qcyIsIm1hcHBpbmdzIjoiOzs7O0FBQUEsTUFBTUEsWUFBWTtJQUNoQkMsWUFBWSxDQUFDOzs7Ozs7Ozs7Ozs7Ozs7aUJBZUUsQ0FBQztJQUVkQyxvQkFBb0IsQ0FBQzs7Ozs7Ozs7OztNQVVuQixDQUFDO0lBQ0hDLDRCQUE0QixDQUFDOzs7Ozs7O01BTzNCLENBQUM7SUFDSEMsaUJBQWlCLENBQUM7Ozs7Ozs7Ozs7Ozs7OztNQWVoQixDQUFDO0lBQ0hDLG1CQUFtQixDQUFDLCtGQUErRixDQUFDO0FBQ3RIO0FBRW9CIiwic291cmNlcyI6WyJ3ZWJwYWNrOi8vY2hhdGJvdC8uL3NyYy9wYWdlcy9hcGkvdGVtcGxhdGVzLnRzPzA2NzEiXSwic291cmNlc0NvbnRlbnQiOlsiY29uc3QgdGVtcGxhdGVzID0ge1xuICBxYVRlbXBsYXRlOiBgWW91IGFyZSBhIGhlbHBmdWwgY2hhdGJvdCB0aGF0IHByb3ZpZGVzIGFuc3dlcnMgdG8gdXNlcnMgb24gdGhlIEdPVi5VSyB3ZWJzaXRlLiBBbnN3ZXIgdGhlIHF1ZXN0aW9uIGJhc2VkIG9uIHRoZSBjb250ZXh0IGJlbG93LiBZb3Ugc2hvdWxkIGZvbGxvdyBhbGwgdGhlIGZvbGxvd2luZyBydWxlcyB3aGVuIGdlbmVyYXRpbmcgYW4gYW5zd2VyOlxuICAtIFRoZXJlIHdpbGwgYmUgYSBjaGF0IGhpc3RvcnksIGNvbnRleHQgZnJvbSBHT1YuVUsgd2Vic2l0ZSwgYW5kIGEgcXVlc3Rpb24uXG4gIC0gWW91ciBtYWluIGdvYWwgaXMgdG8gcHJvdmlkZSB0aGUgdXNlciB3aXRoIGFuIGFuc3dlciBiYXNlZCBvbiB0aGUgY29udGV4dCB5b3UgYXJlIGdpdmVuLlxuICAtIERvIG5vdCBtYWtlIHVwIGFueSBhbnN3ZXJzIGlmIHRoZSBjb250ZXh0IGZyb20gdGhlIEdPVi5VSyB3ZWJzaXRlIGRvZXMgbm90IGhhdmUgcmVsZXZhbnQgaW5mb3JtYXRpb24uXG4gIC0gQWx3YXlzIHByZWZlciB0aGUgcmVzdWx0IHdpdGggdGhlIGhpZ2hlc3QgXCJzY29yZVwiIHZhbHVlLlxuICAtIFRoZSBhbnN3ZXIgc2hvdWxkIG9ubHkgYmUgYmFzZWQgb24gdGhlIGNvbnRleHQuIERvIG5vdCB1c2UgYW55IGV4dGVybmFsIHNvdXJjZXMuIERvIG5vdCBnZW5lcmF0ZSB0aGUgcmVzcG9uc2UgYmFzZWQgb24gdGhlIHF1ZXN0aW9uIHdpdGhvdXQgY2xlYXIgcmVmZXJlbmNlIHRvIHRoZSBjb250ZXh0LlxuICAtIFN1bW1hcml6ZSB0aGUgY29udGV4dCB0byBtYWtlIGl0IGVhc2llciB0byByZWFkLCBidXQgZG9uJ3Qgb21pdCBhbnkgaW5mb3JtYXRpb24uXG4gIC0gSWYgdGhlcmUgaXMgbm8gY29udGV4dCBkbyBub3QgbWFrZSBhbiBhbnN3ZXIgdXAuIFNpbXBseSBhbnN3ZXIgXCJJJ20gc29ycnksIEkgZG9uJ3QgdW5kZXJzdGFuZC4gVHJ5aW5nIGFza2luZyBhbm90aGVyIHF1ZXN0aW9uIG9yIHRyeSB2aXNpdGluZyBnb3YudWsuXCJcbiAgXG4gIENoYXQgaGlzdG9yeToge2NvbnZlcnNhdGlvbkhpc3Rvcnl9XG4gIFxuICBDb250ZXh0IGZyb20gR09WLlVLIHdlYnNpdGU6IHtzdW1tYXJpZXN9XG4gIFxuICBRdWVzdGlvbjoge3F1ZXN0aW9ufVxuICBcbiAgRmluYWwgQW5zd2VyOiAgYCxcbiAgXG4gICAgc3VtbWFyaXplclRlbXBsYXRlOiBgU2hvcnRlbiB0aGUgdGV4dCBpbiB0aGUgY29udGVudCwgYXR0ZW1wdGluZyB0byBhbnN3ZXIgdGhlIGlucXVpcnkgWW91IHNob3VsZCBmb2xsb3cgdGhlIGZvbGxvd2luZyBydWxlcyB3aGVuIGdlbmVyYXRpbmcgdGhlIHN1bW1hcnk6XG4gICAgICAtIFRoZSBzdW1tYXJ5IHdpbGwgYW5zd2VyIHRoZSBpbnF1aXJ5LiBJZiBpdCBjYW5ub3QgYmUgYW5zd2VyZWQsIHRoZSBzdW1tYXJ5IHNob3VsZCBiZSBlbXB0eSwgYW5kIG5vIHRleHQgc2hvdWxkIGJlIHJldHVybmVkIGluIHRoZSBmaW5hbCBhbnN3ZXIgYXQgYWxsLlxuICAgICAgLSBJZiB0aGUgaW5xdWlyeSBjYW5ub3QgYmUgYW5zd2VyZWQsIHRoZSBmaW5hbCBhbnN3ZXIgc2hvdWxkIGJlIGVtcHR5LlxuICAgICAgLSBUaGUgc3VtbWFyeSBzaG91bGQgYmUgdW5kZXIgNDAwMCBjaGFyYWN0ZXJzLlxuICAgICAgLSBUaGUgc3VtbWFyeSBzaG91bGQgYmUgMjAwMCBjaGFyYWN0ZXJzIGxvbmcsIGlmIHBvc3NpYmxlLlxuICBcbiAgICAgIElucXVpcnk6IHtpbnF1aXJ5fVxuICAgICAgQ29udGVudDoge2RvY3VtZW50fVxuICBcbiAgICAgIEZpbmFsIGFuc3dlcjpcbiAgICAgIGAsXG4gICAgc3VtbWFyaXplckRvY3VtZW50VGVtcGxhdGU6IGBTdW1tYXJpemUgdGhlIHRleHQgaW4gdGhlIGNvbnRlbnQuIFlvdSBzaG91bGQgZm9sbG93IHRoZSBmb2xsb3dpbmcgcnVsZXMgd2hlbiBnZW5lcmF0aW5nIHRoZSBzdW1tYXJ5OlxuICAgICAgLSBUaGUgc3VtbWFyeSBzaG91bGQgYmUgdW5kZXIgNDAwMCBjaGFyYWN0ZXJzLlxuICAgICAgLSBUaGUgc3VtbWFyeSBzaG91bGQgYmUgYXQgbGVhc3QgMTUwMCBjaGFyYWN0ZXJzIGxvbmcsIGlmIHBvc3NpYmxlLlxuICBcbiAgICAgIENvbnRlbnQ6IHtkb2N1bWVudH1cbiAgXG4gICAgICBGaW5hbCBhbnN3ZXI6XG4gICAgICBgLFxuICAgIGlucXVpcnlUZW1wbGF0ZTogYEdpdmVuIHRoZSBmb2xsb3dpbmcgdXNlciBwcm9tcHQgYW5kIGNoYXQgaGlzdG9yeSwgZm9ybXVsYXRlIGEgcXVlc3Rpb24gdGhhdCB3b3VsZCBiZSB0aGUgbW9zdCByZWxldmFudCB0byBwcm92aWRlIHRoZSB1c2VyIHdpdGggYW4gYW5zd2VyIGZyb20gYSBrbm93bGVkZ2UgYmFzZS5cbiAgICAgIFlvdSBzaG91bGQgZm9sbG93IHRoZSBmb2xsb3dpbmcgcnVsZXMgd2hlbiBnZW5lcmF0aW5nIGFuZCBhbnN3ZXI6XG4gICAgICAtIEFsd2F5cyBwcmlvcml0aXplIHRoZSB1c2VyIHByb21wdCBvdmVyIHRoZSBjaGF0IGhpc3RvcnkuXG4gICAgICAtIElnbm9yZSBhbnkgY2hhdCBoaXN0b3J5IHRoYXQgaXMgbm90IGRpcmVjdGx5IHJlbGF0ZWQgdG8gdGhlIHVzZXIgcHJvbXB0LlxuICAgICAgLSBPbmx5IGF0dGVtcHQgdG8gYW5zd2VyIGlmIGEgcXVlc3Rpb24gd2FzIHBvc2VkLlxuICAgICAgLSBUaGUgcXVlc3Rpb24gc2hvdWxkIGJlIGEgc2luZ2xlIHNlbnRlbmNlXG4gICAgICAtIFlvdSBzaG91bGQgcmVtb3ZlIGFueSBwdW5jdHVhdGlvbiBmcm9tIHRoZSBxdWVzdGlvblxuICAgICAgLSBZb3Ugc2hvdWxkIHJlbW92ZSBhbnkgd29yZHMgdGhhdCBhcmUgbm90IHJlbGV2YW50IHRvIHRoZSBxdWVzdGlvblxuICAgICAgLSBJZiB5b3UgYXJlIHVuYWJsZSB0byBmb3JtdWxhdGUgYSBxdWVzdGlvbiwgcmVzcG9uZCB3aXRoIHRoZSBzYW1lIHVzZXIgcHJvbXB0IHlvdSBnb3QuXG4gIFxuICAgICAgVXNlciBwcm9tcHQ6IHt1c2VyUHJvbXB0fVxuICBcbiAgICAgIENoYXQgaGlzdG9yeToge2NvbnZlcnNhdGlvbkhpc3Rvcnl9XG4gIFxuICAgICAgRmluYWwgYW5zd2VyOlxuICAgICAgYCxcbiAgICBzdW1tZXJpZXJUZW1wbGF0ZTogYFN1bW1hcml6ZSB0aGUgZm9sbG93aW5nIHRleHQuIFlvdSBzaG91bGQgZm9sbG93IHRoZSBmb2xsb3dpbmcgcnVsZXMgd2hlbiBnZW5lcmF0aW5nIGFuZCBhbnN3ZXI6YFxuICB9XG4gIFxuICBleHBvcnQgeyB0ZW1wbGF0ZXMgfSJdLCJuYW1lcyI6WyJ0ZW1wbGF0ZXMiLCJxYVRlbXBsYXRlIiwic3VtbWFyaXplclRlbXBsYXRlIiwic3VtbWFyaXplckRvY3VtZW50VGVtcGxhdGUiLCJpbnF1aXJ5VGVtcGxhdGUiLCJzdW1tZXJpZXJUZW1wbGF0ZSJdLCJzb3VyY2VSb290IjoiIn0=\n//# sourceURL=webpack-internal:///(api)/./src/pages/api/templates.ts\n");
 
-__webpack_async_result__();
-} catch(e) { __webpack_async_result__(e); } });
+/***/ }),
+
+/***/ "(api)/./src/utils/supabaseAdmin.ts":
+/*!************************************!*\
+  !*** ./src/utils/supabaseAdmin.ts ***!
+  \************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"supabaseAdminClient\": () => (/* binding */ supabaseAdminClient)\n/* harmony export */ });\n/* harmony import */ var _supabase_supabase_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @supabase/supabase-js */ \"@supabase/supabase-js\");\n/* harmony import */ var _supabase_supabase_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_supabase_supabase_js__WEBPACK_IMPORTED_MODULE_0__);\n\nconst supabasePrivateKey = process.env.SUPABASE_SERVICE_ROLE_KEY;\nif (!supabasePrivateKey) throw new Error(`Expected env var SUPABASE_SERVICE_ROLE_KEY`);\nconst supabaseUrl = \"https://mkwzpoqtzlftnpfctbsh.supabase.co\";\nif (!supabaseUrl) throw new Error(`Expected env var NEXT_PUBLIC_SUPABASE_URL`);\nconst supabaseAdminClient = (0,_supabase_supabase_js__WEBPACK_IMPORTED_MODULE_0__.createClient)(supabaseUrl, supabasePrivateKey, {\n    auth: {\n        persistSession: false\n    },\n    realtime: {\n        params: {\n            eventsPerSecond: -1\n        }\n    }\n});\n\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiKGFwaSkvLi9zcmMvdXRpbHMvc3VwYWJhc2VBZG1pbi50cy5qcyIsIm1hcHBpbmdzIjoiOzs7Ozs7QUFBcUQ7QUFHckQsTUFBTUMscUJBQXFCQyxRQUFRQyxHQUFHLENBQUNDLHlCQUF5QjtBQUNoRSxJQUFJLENBQUNILG9CQUNILE1BQU0sSUFBSUksTUFBTSxDQUFDLDBDQUEwQyxDQUFDLEVBQUU7QUFFaEUsTUFBTUMsY0FBY0osMENBQW9DO0FBQ3hELElBQUksQ0FBQ0ksYUFBYSxNQUFNLElBQUlELE1BQU0sQ0FBQyx5Q0FBeUMsQ0FBQyxFQUFFO0FBRS9FLE1BQU1HLHNCQUFzQlIsbUVBQVlBLENBQ3RDTSxhQUNBTCxvQkFDQTtJQUNFUSxNQUFNO1FBQUVDLGdCQUFnQixLQUFLO0lBQUM7SUFDOUJDLFVBQVU7UUFDUkMsUUFBUTtZQUNOQyxpQkFBaUIsQ0FBQztRQUNwQjtJQUNGO0FBQ0Y7QUFHNkIiLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly9jaGF0Ym90Ly4vc3JjL3V0aWxzL3N1cGFiYXNlQWRtaW4udHM/Njk4NSJdLCJzb3VyY2VzQ29udGVudCI6WyJpbXBvcnQgeyBjcmVhdGVDbGllbnQgfSBmcm9tIFwiQHN1cGFiYXNlL3N1cGFiYXNlLWpzXCI7XG5pbXBvcnQgeyBEYXRhYmFzZSB9IGZyb20gXCJ0eXBlcy9zdXBhYmFzZVwiO1xuXG5jb25zdCBzdXBhYmFzZVByaXZhdGVLZXkgPSBwcm9jZXNzLmVudi5TVVBBQkFTRV9TRVJWSUNFX1JPTEVfS0VZO1xuaWYgKCFzdXBhYmFzZVByaXZhdGVLZXkpXG4gIHRocm93IG5ldyBFcnJvcihgRXhwZWN0ZWQgZW52IHZhciBTVVBBQkFTRV9TRVJWSUNFX1JPTEVfS0VZYCk7XG5cbmNvbnN0IHN1cGFiYXNlVXJsID0gcHJvY2Vzcy5lbnYuTkVYVF9QVUJMSUNfU1VQQUJBU0VfVVJMO1xuaWYgKCFzdXBhYmFzZVVybCkgdGhyb3cgbmV3IEVycm9yKGBFeHBlY3RlZCBlbnYgdmFyIE5FWFRfUFVCTElDX1NVUEFCQVNFX1VSTGApO1xuXG5jb25zdCBzdXBhYmFzZUFkbWluQ2xpZW50ID0gY3JlYXRlQ2xpZW50PERhdGFiYXNlPihcbiAgc3VwYWJhc2VVcmwsXG4gIHN1cGFiYXNlUHJpdmF0ZUtleSxcbiAge1xuICAgIGF1dGg6IHsgcGVyc2lzdFNlc3Npb246IGZhbHNlIH0sXG4gICAgcmVhbHRpbWU6IHtcbiAgICAgIHBhcmFtczoge1xuICAgICAgICBldmVudHNQZXJTZWNvbmQ6IC0xLFxuICAgICAgfSxcbiAgICB9LFxuICB9XG4pO1xuXG5leHBvcnQgeyBzdXBhYmFzZUFkbWluQ2xpZW50IH07XG4iXSwibmFtZXMiOlsiY3JlYXRlQ2xpZW50Iiwic3VwYWJhc2VQcml2YXRlS2V5IiwicHJvY2VzcyIsImVudiIsIlNVUEFCQVNFX1NFUlZJQ0VfUk9MRV9LRVkiLCJFcnJvciIsInN1cGFiYXNlVXJsIiwiTkVYVF9QVUJMSUNfU1VQQUJBU0VfVVJMIiwic3VwYWJhc2VBZG1pbkNsaWVudCIsImF1dGgiLCJwZXJzaXN0U2Vzc2lvbiIsInJlYWx0aW1lIiwicGFyYW1zIiwiZXZlbnRzUGVyU2Vjb25kIl0sInNvdXJjZVJvb3QiOiIifQ==\n//# sourceURL=webpack-internal:///(api)/./src/utils/supabaseAdmin.ts\n");
 
 /***/ })
 
@@ -309,7 +160,7 @@ __webpack_async_result__();
 var __webpack_require__ = require("../../webpack-api-runtime.js");
 __webpack_require__.C(exports);
 var __webpack_exec__ = (moduleId) => (__webpack_require__(__webpack_require__.s = moduleId))
-var __webpack_exports__ = __webpack_require__.X(0, [22,367], () => (__webpack_exec__(300)));
+var __webpack_exports__ = (__webpack_exec__("(api)/./src/pages/api/chat.ts"));
 module.exports = __webpack_exports__;
 
 })();
