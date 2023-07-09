@@ -108,7 +108,7 @@ const inquiry: string = inquiryChainResult.text;
           modelName: "gpt-3.5-turbo-16k",
           callbackManager: CallbackManager.fromHandlers({
             async handleLLMNewToken(token) {
-              const text = token.text || "";
+              const text = token || "";
               if (!["I don't know", "sorry", "Ask another question"].some(el => text.toLowerCase().includes(el.toLowerCase()))) {
                 await channel.send({
                   type: "broadcast",

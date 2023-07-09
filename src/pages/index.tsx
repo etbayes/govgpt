@@ -10,7 +10,7 @@ import {
 } from "@supabase/auth-ui-shared";
 import { Image, Text, ActionIcon, ThemeIcon, Button } from '@mantine/core';
 import { IconSend, IconTrash, IconUser, IconTrendingUp, IconChevronRight, IconLogout } from '@tabler/icons-react';
-import { Search } from './search';
+import Search from './search';
 
 type ConversationEntry = {
   message: string;
@@ -21,8 +21,8 @@ type ConversationEntry = {
 
 const updateChatbotMessage = (
   conversation: ConversationEntry[],
-  message: { interactionId: string; token: string; event: "responseEnd", url?: string}
-) => {
+  message: { interactionId: string; token: string; event: "responseEnd" | "response", url?: string}
+) => { 
   
   const interactionId = message.interactionId;
 
@@ -34,7 +34,7 @@ const updateChatbotMessage = (
     []
   );
   
-  const updatedMessage = {
+  const updatedMessage: ConversationEntry = {
     id: interactionId,
     message: message.token,
     speaker: "bot",
@@ -49,7 +49,6 @@ const updateChatbotMessage = (
       ];
 };
 
- 
 
 
 export default function Home() {
@@ -125,7 +124,9 @@ export default function Home() {
         );
         // Add URLs to the conversation
         const urlEntry: ConversationEntry = {
-          url: payload.urls && payload.urls[0] 
+          message: "",
+          url: payload.urls && payload.urls[0], 
+          speaker: 'bot'
         };
         setConversation((state) => [...state, urlEntry]);
         if (payload.urls && payload.urls[0]) {
@@ -178,9 +179,10 @@ export default function Home() {
        });
         const data = await response.json();
         if (data.generations && data.generations[0] && data.generations[0][0]) {
-          setConversation((currentConversation) => updateChatbotMessage(currentConversation, {interactionId: data.interactionId, token: data.generations[0][0].text, event: "response"}));
-        } else {
-          console.error("Error submitting message:", error);
+          setConversation((currentConversation) => updateChatbotMessage(currentConversation, {interactionId: data.interactionId, token: data.generations[0][0].text, event: "responseEnd"}));
+        }
+         else {
+          throw new Error("Unexpected data structure.");
         }
       } catch (error) {
        console.error("Error submitting message:", error);
@@ -189,7 +191,7 @@ export default function Home() {
    };
   
   
-  const handleButtonClick = async (text) => {
+  const handleButtonClick = async (text: string) => {
     setConversation([
       { message: text, speaker: 'user' }
     ]);
@@ -214,7 +216,7 @@ export default function Home() {
 
   const showPrompts = conversation.length === 0;
 
-  const renderMessageContent = (content) => {
+  const renderMessageContent = (content: string) => {
     if (content.includes('http://') || content.includes('https://')) {
       const parts = content.split(/\b(https?:\/\/\S+)\b/);
       return parts.map((part, index) => {
@@ -310,7 +312,7 @@ export default function Home() {
             <IconTrendingUp size="1.125rem" style={{ color: '#697075' }}/>
             <Button
               variant="outline"
-              colorScheme="gray"
+              color="gray"
               radius="xl"
               compact
               style={{
@@ -324,7 +326,7 @@ export default function Home() {
             </Button>
             <Button
               variant="outline"
-              colorScheme="gray"
+              color="gray"
               radius="xl"
               compact
               style={{
@@ -338,7 +340,7 @@ export default function Home() {
             </Button>
             <Button
               variant="outline"
-              colorScheme="gray"
+              color="gray"
               radius="xl"
               compact
               style={{

@@ -3,22 +3,24 @@
 {/* search.tsx */}
 
 import { useState, useEffect } from 'react';
-import { Switch, Image, Text, ActionIcon, ThemeIcon, Button, SegmentedControl, Center, Box } from '@mantine/core';
-import { IconSend, IconTrash, IconUser, IconTrendingUp, IconChevronRight, IconSun, IconMoonStars } from '@tabler/icons-react';
-import { ExperimentOutlined } from '@ant-design/icons';
+import { Image, Text, ActionIcon, ThemeIcon, Button, SegmentedControl, Center, Box } from '@mantine/core';
+import { IconSend, IconTrendingUp } from '@tabler/icons-react';
 import { ReactSearchAutocomplete } from 'react-search-autocomplete'
 import axios from 'axios';
 import Papa from 'papaparse';
-// import { Sparkle } from "utils/Sparkle";
 
+interface SearchProps {
+  setConversation: React.Dispatch<React.SetStateAction<any[]>>;
+  setIsInitialInputGiven: React.Dispatch<React.SetStateAction<boolean>>;
+}
 
-export const Search = ({ setConversation, setIsInitialInputGiven }) => {
-  const [items, setItems] = useState([]);
+const Search: React.FC<SearchProps> = ({ setConversation, setIsInitialInputGiven }) => {
+  const [items, setItems] = useState<any[]>([]);
   const [initialText, setInitialText] = useState("");
   const [language, setLanguage] = useState('English');
 
 
-  const handleInitialSubmit = async (text) => {
+  const handleInitialSubmit = async (text: string) => {
     setConversation([{ message: text, speaker: "user" }]);
     setIsInitialInputGiven(true);
     
@@ -55,29 +57,27 @@ export const Search = ({ setConversation, setIsInitialInputGiven }) => {
   
 
 
-  const handleOnSearch = (string, results) => {
+  const handleOnSearch = (string: string, results: any[]) => {
     console.log(string, results)
   }
+  
 
-
-  const handleOnHover = (result) => {
+  const handleOnHover = (result: any) => {
     console.log(result)
   }
 
-  const handleOnSelect = (item) => {
+  const handleOnSelect = (item: any) => {
     setInitialText(item.name);
  }
  
- const clickButton = (buttonText) => {
+ const clickButton = (buttonText: string) => {
   setInitialText(buttonText);
   handleInitialSubmit(buttonText);
 }
 
-
-
-  const handleOnClick = (e) => {
-    e.preventDefault();
-  }
+const handleOnClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  e.preventDefault();
+}
 
   const handleOnFocus = () => {
     console.log('Focused')
@@ -85,11 +85,11 @@ export const Search = ({ setConversation, setIsInitialInputGiven }) => {
 
   const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    handleInitialSubmit();
+    handleInitialSubmit(initialText);
  }
  
 
-  const formatResult = (item) => {
+  const formatResult = (item: any) => {
     if (item && item.name) {
       return (
         <>
@@ -129,16 +129,12 @@ export const Search = ({ setConversation, setIsInitialInputGiven }) => {
             placeholder={language === 'Cymraeg' ? 'Gofyn cwestiwn...' : 'Ask a question...'}
             showNoResults={false}
             showIcon={false}
-            value={initialText} // add this line
-            onChange={(e) => {
-              setInitialText(e.target.value);
-            }}
             styling={{ borderRadius: "5px", fontSize: "14px", height: "38px" }}
           />
 
           </form>
           
-          <ActionIcon id="sendbutton" className="border border-gray-300 rounded h-10 w-10" onClick={handleFormSubmit}> 
+          <ActionIcon id="sendbutton" className="border border-gray-300 rounded h-10 w-10" type="submit">
             <IconSend size="1.125rem"/>
           </ActionIcon>
         </div>
@@ -147,7 +143,7 @@ export const Search = ({ setConversation, setIsInitialInputGiven }) => {
           <IconTrendingUp size="1.125rem" style={{ color: '#697075' }} />
           <Button
             variant="outline"
-            colorScheme="gray"
+            color="gray"
             radius="xl"
             compact
             style={{ borderColor: '#D8DBDF', color: '#697075', fontWeight: 'normal' }}
@@ -158,7 +154,7 @@ export const Search = ({ setConversation, setIsInitialInputGiven }) => {
 
           <Button
             variant="outline"
-            colorScheme="gray"
+            color="gray"
             radius="xl"
             compact
             style={{ borderColor: '#D8DBDF', color: '#697075', fontWeight: 'normal' }}
@@ -169,7 +165,7 @@ export const Search = ({ setConversation, setIsInitialInputGiven }) => {
 
           <Button
             variant="outline"
-            colorScheme="gray"
+            color="gray"
             radius="xl"
             compact
             style={{ borderColor: '#D8DBDF', color: '#697075', fontWeight: 'normal' }}
@@ -180,7 +176,7 @@ export const Search = ({ setConversation, setIsInitialInputGiven }) => {
 
           <Button
             variant="outline"
-            colorScheme="gray"
+            color="gray"
             radius="xl"
             compact
             style={{ borderColor: '#D8DBDF', color: '#697075', fontWeight: 'normal' }}
@@ -222,7 +218,7 @@ export const Search = ({ setConversation, setIsInitialInputGiven }) => {
 
       <div id="bottom" className="w-full h-12 flex items-center justify-center gap-3">
       <Text fz="xs" style={{ color: '#697075' }}>{language === 'Cymraeg' ? 'Mae GOVGPT yn arbrawf' : 'GOVGPT is an experiment'}</Text>
-        <ExperimentOutlined size="0.8rem" style={{ color: '#697075' }} />
+        
         <p style={{ fontSize: '11px', color: '#697075' }}>|</p>
         <Text fz="xs" style={{ color: '#697075' }}>
         {language === 'Cymraeg' ? 'Cynnwys a gyhoeddwyd o dan y' : 'Content published under the'}{' '}
@@ -239,3 +235,5 @@ export const Search = ({ setConversation, setIsInitialInputGiven }) => {
     </div>
   );
 }
+
+export default Search;
