@@ -37,7 +37,7 @@ const handleRequest = async ({
     // Retrieve the conversation log and save the user's prompt
     const conversationLog = new ConversationLog(userId);
     const conversationHistory = await conversationLog.getConversation({
-      limit: 5,
+      limit: 6,
     });
     await conversationLog.addEntry({ entry: prompt, speaker: "user" });
     

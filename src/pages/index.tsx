@@ -9,7 +9,7 @@ import {
   ThemeSupa,
 } from "@supabase/auth-ui-shared";
 import { Image, Text, ActionIcon, ThemeIcon, Button } from '@mantine/core';
-import { IconSend, IconTrash, IconUser, IconTrendingUp, IconChevronRight, IconLogout } from '@tabler/icons-react';
+import { IconSend, IconTrash, IconUser, IconTrendingUp, IconChevronRight, IconLogout, IconThumbUp, IconThumbDown, IconThumbDownFilled, IconThumbUpFilled } from '@tabler/icons-react';
 import Search from './search';
 
 type ConversationEntry = {
@@ -38,8 +38,9 @@ const updateChatbotMessage = (
     id: interactionId,
     message: message.token,
     speaker: "bot",
-    url: message.url,
+    url: message.url ? message.url.replace("www.www.", "www.") : undefined,
   };
+  
 
   return conversation.some((e) => e.id === interactionId)
     ? updatedConversation
@@ -58,7 +59,23 @@ export default function Home() {
   const [statusMessage, setStatusMessage] = useState("Waiting for query...");
   const [userId, setUserId] = useState<string | undefined>();
   const [linkUrl, setLinkUrl] = useState("");
-  const [isInitialInputGiven, setIsInitialInputGiven] = useState(false);
+  const [isInitialInputGiven, setIsInitialInputGiven] = useState(true);
+  const [votes, setVotes] = useState<Record<number, 'up' | 'down' | undefined>>({});
+  
+  const handleVote = (index: number, type: 'up' | 'down') => {
+    setVotes(prevVotes => {
+      if(prevVotes[index] === type){
+        // If the current vote is the same as the clicked vote, remove the vote
+        const newVotes = { ...prevVotes };
+        delete newVotes[index];
+        return newVotes;
+      }else{
+        // If the current vote is different than the clicked vote, change the vote
+        return { ...prevVotes, [index]: type };
+      }
+    });
+  };
+
 
   const signOut = async () => {
     const { error } = await supabaseBrowserClient.auth.signOut();
@@ -125,13 +142,14 @@ export default function Home() {
         // Add URLs to the conversation
         const urlEntry: ConversationEntry = {
           message: "",
-          url: payload.urls && payload.urls[0], 
+          url: payload.urls && payload.urls[0] ? payload.urls[0].replace("www.www.", "www.") : undefined,
           speaker: 'bot'
         };
         setConversation((state) => [...state, urlEntry]);
         if (payload.urls && payload.urls[0]) {
-          setLinkUrl(payload.urls[0]);
+          setLinkUrl(payload.urls[0].replace("www.www.", "www."));
         }
+        
         break;
       
       case "status":
@@ -283,6 +301,7 @@ export default function Home() {
               <div id="chatbotmessage" className="ml-3 flex flex-row" style={{ fontSize: '14px', paddingTop: '3px' }}>
                 <Text id="chatmessage" fz="sm" style={{ color: '#697075' }}>{entry.message}</Text>
                 {entry.url && entry.message !== "I don't know" && entry.message !== "Can you ask another question" && (
+                  <div id="rlhf" className="flex justify-between w-full">
                   <Button 
                     id="urlbutton"
                     rightIcon={<IconChevronRight />}
@@ -295,6 +314,22 @@ export default function Home() {
                   > 
                     Learn more 
                   </Button>
+                      <div className="flex">
+                      <ActionIcon 
+                    variant="subtle"
+                    onClick={() => handleVote(index, 'up')}
+                  >
+                    {votes[index] === 'up' ? <IconThumbUpFilled size="1.125rem" /> : <IconThumbUp size="1.125rem" />}
+                  </ActionIcon>
+                  <ActionIcon 
+                    variant="subtle"
+                    onClick={() => handleVote(index, 'down')}
+                  >
+                    {votes[index] === 'down' ? <IconThumbDownFilled size="1.125rem" /> : <IconThumbDown size="1.125rem" />}
+                  </ActionIcon>
+                  
+                      </div>
+                      </div>
                 )}
       </div>
     </div>
